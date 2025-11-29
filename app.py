@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, jsonify
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Optional, Dict, Any, List
+import uvicorn
 from pymongo import MongoClient
 from neo4j import GraphDatabase
-import requests
 from sentence_transformers import SentenceTransformer
 import uuid
 from dotenv import load_dotenv
@@ -13,6 +15,9 @@ import atexit
 import nltk
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from nltk.tokenize import word_tokenize
+from together import Together
+import asyncio
+from contextlib import asynccontextmanager
 
 # --- NLTK Setup ---
 print("[INFO] NLTK 'punkt' not found. Downloading...")
@@ -23,10 +28,8 @@ print("[INFO] Download complete.")
 # Load environment variables from .env file
 os.environ.pop("SSL_CERT_FILE", None)
 load_dotenv()
-from together import Together
 
 # --- Initializations ---
-app = Flask(__name__)
 mongo_uri = os.getenv("MONGO_URI")
 mongo_db_name = os.getenv("MONGO_DB")
 mongo_collection_name = os.getenv("MONGO_COLLECTION")
@@ -49,6 +52,52 @@ comparison_cache = {}
 
 # --- Metrics File ---
 METRICS_FILE = 'feedback_metrics.json'
+
+
+# --- Pydantic Models ---
+class QueryRequest(BaseModel):
+    query: str
+    k: int = 10
+
+
+class ComparisonRequest(BaseModel):
+    session_id: str
+
+
+class FeedbackRequest(BaseModel):
+    session_id: str
+    model_type: str
+    ratings: Dict[str, int]
+
+
+class CleanupRequest(BaseModel):
+    session_id: str
+
+
+# --- Response Models ---
+class QueryResponse(BaseModel):
+    retrieved_docs: List[Dict[str, Any]]
+    nodes: List[Dict[str, Any]]
+    edges: List[Dict[str, Any]]
+    session_id: str
+    answer: str
+
+
+class ComparisonResponse(BaseModel):
+    plain_llm_answer: str
+    mongodb_rag_answer: str
+    neo4j_kg_rag_answer: str
+    calculated_metrics: Dict[str, Dict[str, float]]
+
+
+class FeedbackResponse(BaseModel):
+    success: bool
+    message: str
+
+
+class HealthResponse(BaseModel):
+    status: str
+    message: str
 
 
 # --- Utility Functions ---
@@ -87,16 +136,12 @@ def calculate_bleu(candidate, reference):
     """Calculates BLEU score with smoothing."""
     if not candidate or not reference: return 0.0
     candidate_tokens = word_tokenize(candidate.lower())
-    reference_tokens = [word_tokenize(reference.lower())]  # Must be a list of reference sentences
+    reference_tokens = [word_tokenize(reference.lower())]
     if not candidate_tokens or not reference_tokens[0]:
         return 0.0
 
     chencherry = SmoothingFunction()
     return sentence_bleu(reference_tokens, candidate_tokens, smoothing_function=chencherry.method1)
-
-
-# Initialize metrics file
-all_metrics = load_metrics()
 
 
 def extract_json_from_string(s):
@@ -111,28 +156,64 @@ def extract_json_from_string(s):
         return None
 
 
-# --- Flask Routes ---
-@app.route("/")
-def index():
-    return render_template("index.html")
+# Initialize metrics file
+all_metrics = load_metrics()
+
+# --- FastAPI App ---
+app = FastAPI(
+    title="RAG Knowledge Graph API",
+    version="1.0.0",
+    description="RAG system with MongoDB vector search and Neo4j knowledge graph extraction"
+)
 
 
-# Replace your current query() function with this one for debugging
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    print("[INFO] FastAPI application starting up...")
+    yield
+    # Shutdown
+    print("[INFO] FastAPI application shutting down...")
+    save_metrics(all_metrics)
+    neo4j_driver.close()
+    mongo_client.close()
 
 
-@app.route("/query", methods=["POST"])
-def query():
-    data = request.get_json()
-    user_query = data.get("query", "")
-    k = int(data.get("k", 10))
+app.router.lifespan_context = lifespan
+
+
+@app.get("/", response_model=HealthResponse)
+async def root():
+    """Root endpoint - API is running"""
+    return HealthResponse(
+        status="success",
+        message="RAG Knowledge Graph API is running. Use /docs for API documentation."
+    )
+
+
+@app.get("/health", response_model=HealthResponse)
+async def health_check():
+    """Health check endpoint"""
+    return HealthResponse(
+        status="healthy",
+        message="RAG Knowledge Graph API is running"
+    )
+
+
+@app.post("/query", response_model=QueryResponse)
+async def query_endpoint(request: QueryRequest):
+    """Main query endpoint for RAG + Knowledge Graph extraction"""
+    user_query = request.query
+    k = request.k
+
     if not user_query:
-        return jsonify({"error": "Query cannot be empty"}), 400
+        raise HTTPException(status_code=400, detail="Query cannot be empty")
 
     # 1. Fetch documents from MongoDB
     try:
         query_vector = LOCAL_EMBEDDING_MODEL.encode(user_query, normalize_embeddings=True).tolist()
     except Exception as e:
-        return jsonify({"error": f"Failed to generate query embedding: {e}"}), 500
+        raise HTTPException(status_code=500, detail=f"Failed to generate query embedding: {e}")
 
     pipeline = [
         {"$vectorSearch": {"index": "embeddings", "path": "embedding", "queryVector": query_vector,
@@ -140,10 +221,11 @@ def query():
         {"$project": {"_id": 1, "content": 1, "title": 1, "summary": 1, "keywords": 1, "url": 1,
                       "score": {"$meta": "vectorSearchScore"}}}
     ]
+
     try:
         docs = list(mongo_collection.aggregate(pipeline))
     except Exception as e:
-        return jsonify({"error": f"Database vector search failed: {e}."}), 500
+        raise HTTPException(status_code=500, detail=f"Database vector search failed: {e}.")
 
     retrieved_docs_for_frontend = [{
         "id": str(doc.get("_id")),
@@ -164,7 +246,7 @@ def query():
 
     docs_text = "\n\n".join(docs_text_parts)
 
-    # 3. LLM Prompting
+    # 3. LLM Prompting for Knowledge Graph Extraction
     client = Together(api_key=os.getenv("TOGETHER_API_KEY"))
     prompt = f"""
     You are a powerful system that extracts a structured knowledge graph from a collection of documents.
@@ -172,8 +254,8 @@ def query():
 
     **CRITICAL RULE: The 'source' entity MUST be the entity that PERFORMS the action ('relation') on the 'target' entity. Do not invert the relationship.**
     -   **Correct Example**: If the text is "IBM announced the development of Infoscope", the output MUST be:
-        `{{'source': 'IBM', 'relation': 'DEVELOPED', 'target': 'Infoscope'}}`
-    -   **Incorrect Example**: Do NOT output `{{'source': 'Infoscope', 'relation': 'DEVELOPED_BY', 'target': 'IBM'}}`. Always make the actor the source.
+        {{'source': 'IBM', 'relation': 'DEVELOPED', 'target': 'Infoscope'}}
+    -   **Incorrect Example**: Do NOT output {{'source': 'Infoscope', 'relation': 'DEVELOPED_BY', 'target': 'IBM'}}. Always make the actor the source.
 
     Your task is to:
     1. Extract a list of named entities. For EACH entity, you MUST specify the ID of the document it came from.
@@ -206,6 +288,7 @@ def query():
     {docs_text}
     \"\"\"
     """
+
     try:
         print("[INFO] Sending single batch prompt to Together AI...")
         response = client.chat.completions.create(
@@ -213,14 +296,14 @@ def query():
             messages=[{"role": "user", "content": prompt}]
         )
         parsed_output = extract_json_from_string(response.choices[0].message.content)
-        print(parsed_output)
+        print("[INFO] LLM Response:", parsed_output)
         if not parsed_output or "entities" not in parsed_output:
             raise ValueError("LLM response was empty or malformed.")
         print("[INFO] Successfully parsed LLM response.")
     except Exception as e:
-        return jsonify({"error": f"Knowledge extraction failed: {e}"}), 500
+        raise HTTPException(status_code=500, detail=f"Knowledge extraction failed: {e}")
 
-    # 3.5 Generate paragraph answer
+    # 3.5 Generate paragraph answer (MongoDB RAG)
     try:
         context_text = "\n\n".join([
             f"Title: {doc.get('title', '[No title]')}\nSummary: {doc.get('summary', '[No summary]')}\nKeywords: {', '.join(doc.get('keywords', []))}"
@@ -258,12 +341,17 @@ def query():
     for doc_data in retrieved_docs_for_frontend:
         if doc_data['id'] in referenced_doc_ids:
             doc_node_id = f"doc_{doc_data['id']}"
-            unique_nodes[doc_node_id] = {"id": doc_node_id, "label": f"Doc: {doc_data['id'][:8]}...",
-                                         "group": "Document", "score": float(doc_data['score'])}
+            unique_nodes[doc_node_id] = {
+                "id": doc_node_id,
+                "label": f"Doc: {doc_data['id'][:8]}...",
+                "group": "Document",
+                "score": float(doc_data['score'])
+            }
 
     all_entities_from_llm = parsed_output.get("entities", [])
     for ent in all_entities_from_llm:
-        if not all(k in ent for k in ["name", "type", "source_document_id"]): continue
+        if not all(k in ent for k in ["name", "type", "source_document_id"]):
+            continue
         ent_id = f"{ent['type']}_{ent['name']}".replace(" ", "_").lower()
         doc_id = ent["source_document_id"]
         doc_node_id = f"doc_{doc_id}"
@@ -272,7 +360,7 @@ def query():
         if doc_node_id in unique_nodes:
             edges.append({"from": doc_node_id, "to": ent_id})
 
-    # MODIFIED SECTION: Dynamically create nodes for hallucinated entities
+    # Handle hallucinated entities
     entity_map = {e['name']: f"{e['type']}_{e['name']}".replace(" ", "_").lower() for e in all_entities_from_llm}
     for rel in parsed_output.get("relationships", []):
         src_name = rel.get("source")
@@ -292,50 +380,61 @@ def query():
 
         src_id = entity_map[src_name]
         tgt_id = entity_map[tgt_name]
-        edges.append({"from": src_id, "to": tgt_id, "relation": rel.get("relation", "RELATED_TO")})
-    # END OF MODIFIED SECTION
+        edges.append({
+            "from": src_id,
+            "to": tgt_id,
+            "relation": rel.get("relation", "RELATED_TO")
+        })
 
     nodes = list(unique_nodes.values())
 
-    # 5. Push graph to Neo4j using MERGE and ON CREATE SET
-    with neo4j_driver.session() as session:
-        for node_data in nodes:
-            if node_data['group'] == 'Document':
-                session.run("""
-                    MERGE (d:Document {id: $id})
-                    ON CREATE SET d.title = $label, d.session = $sid
-                """, id=node_data['id'], label=node_data['label'], sid=session_id)
-            else:
-                safe_label = re.sub(r'[^a-zA-Z0-9_]', '_', node_data['group'])
-                session.run(f"""
-                    MERGE (e:{safe_label} {{id: $id}})
-                    ON CREATE SET e.name = $label, e.session = $sid
-                """, id=node_data['id'], label=node_data['label'], sid=session_id)
-
-        session.run("""
-            MERGE (c:Center {id: "db"})
-            ON CREATE SET c.label = "DB"
-        """)
-        for node_data in nodes:
-            if node_data["group"] == "Document":
-                session.run("""
-                    MATCH (c:Center {id: "db"}), (d:Document {id: $doc_id})
-                    MERGE (c)-[:CONTAINS]->(d)
-                """, doc_id=node_data["id"])
-
-        for edge_data in edges:
-            if edge_data.get('relation'):
-                rel_type = re.sub(r'[^a-zA-Z0-9_]', '', edge_data['relation'].replace(" ", "_").upper())
-                if rel_type:
+    # 5. Push graph to Neo4j
+    try:
+        with neo4j_driver.session() as session:
+            # Create nodes
+            for node_data in nodes:
+                if node_data['group'] == 'Document':
+                    session.run("""
+                        MERGE (d:Document {id: $id})
+                        ON CREATE SET d.title = $label, d.session = $sid
+                    """, id=node_data['id'], label=node_data['label'], sid=session_id)
+                else:
+                    safe_label = re.sub(r'[^a-zA-Z0-9_]', '_', node_data['group'])
                     session.run(f"""
-                        MATCH (a {{id: $src}}), (b {{id: $tgt}})
-                        MERGE (a)-[r:{rel_type}]->(b)
+                        MERGE (e:{safe_label} {{id: $id}})
+                        ON CREATE SET e.name = $label, e.session = $sid
+                    """, id=node_data['id'], label=node_data['label'], sid=session_id)
+
+            # Create center node and connect documents
+            session.run("""
+                MERGE (c:Center {id: "db"})
+                ON CREATE SET c.label = "DB"
+            """)
+            for node_data in nodes:
+                if node_data["group"] == "Document":
+                    session.run("""
+                        MATCH (c:Center {id: "db"}), (d:Document {id: $doc_id})
+                        MERGE (c)-[:CONTAINS]->(d)
+                    """, doc_id=node_data["id"])
+
+            # Create relationships
+            for edge_data in edges:
+                if edge_data.get('relation'):
+                    rel_type = re.sub(r'[^a-zA-Z0-9_]', '', edge_data['relation'].replace(" ", "_").upper())
+                    if rel_type:
+                        session.run(f"""
+                            MATCH (a {{id: $src}}), (b {{id: $tgt}})
+                            MERGE (a)-[r:{rel_type}]->(b)
+                        """, src=edge_data['from'], tgt=edge_data['to'])
+                else:
+                    session.run("""
+                        MATCH (d:Document {id: $src}), (e {id: $tgt})
+                        MERGE (d)-[:MENTIONS]->(e)
                     """, src=edge_data['from'], tgt=edge_data['to'])
-            else:
-                session.run("""
-                    MATCH (d:Document {id: $src}), (e {id: $tgt})
-                    MERGE (d)-[:MENTIONS]->(e)
-                """, src=edge_data['from'], tgt=edge_data['to'])
+    except Exception as e:
+        print(f"[WARNING] Neo4j graph creation failed: {e}")
+        # Continue without failing the entire request
+
     all_entity_names = list(entity_map.keys())
     comparison_cache[session_id] = {
         "query": user_query,
@@ -344,22 +443,23 @@ def query():
         "extracted_entities": all_entity_names,
         "document_info": retrieved_docs_for_frontend
     }
-    return jsonify({
-        "retrieved_docs": retrieved_docs_for_frontend,
-        "nodes": nodes,
-        "edges": edges,
-        "session_id": session_id,
-        "answer": paragraph_answer or "No answer generated."
-    })
+
+    return QueryResponse(
+        retrieved_docs=retrieved_docs_for_frontend,
+        nodes=nodes,
+        edges=edges,
+        session_id=session_id,
+        answer=paragraph_answer or "No answer generated."
+    )
 
 
-# The rest of the file (/generate_comparison, /save_feedback, etc.) remains unchanged
-@app.route("/generate_comparison", methods=["POST"])
-def generate_comparison():
-    data = request.get_json()
-    session_id = data.get("session_id")
+@app.post("/generate_comparison", response_model=ComparisonResponse)
+async def generate_comparison_endpoint(request: ComparisonRequest):
+    """Generate comparison between different RAG approaches"""
+    session_id = request.session_id
+
     if not session_id or session_id not in comparison_cache:
-        return jsonify({"error": "Invalid or expired session ID."}), 404
+        raise HTTPException(status_code=404, detail="Invalid or expired session ID.")
 
     cached_data = comparison_cache[session_id]
     user_query = cached_data["query"]
@@ -367,24 +467,31 @@ def generate_comparison():
     baseten_client = OpenAI(api_key=baseten_api_key, base_url="https://inference.baseten.co/v1")
     model_name = "moonshotai/Kimi-K2-Instruct-0905"
 
+    # Generate Plain LLM Answer
     try:
         plain_prompt = f"Answer the following query based on your general knowledge. Be concise, one paragraph, max 150 words. Query: {user_query}"
         response = baseten_client.chat.completions.create(
-            model=model_name, messages=[{"role": "user", "content": plain_prompt}], max_tokens=1000)
+            model=model_name,
+            messages=[{"role": "user", "content": plain_prompt}],
+            max_tokens=1000
+        )
         plain_llm_answer = response.choices[0].message.content
     except Exception as e:
         plain_llm_answer = f"[Plain LLM answer generation failed: {e}]"
 
     mongodb_rag_answer = cached_data.get("mongodb_rag_answer", "[Answer not found in cache]")
 
+    # Generate Neo4j KG RAG Answer
     try:
         entities = cached_data.get("extracted_entities")
-        if not entities: raise ValueError("No entities were pre-extracted.")
+        if not entities:
+            raise ValueError("No entities were pre-extracted.")
 
         with neo4j_driver.session() as session:
             results = session.run(
                 "UNWIND $entities AS e MATCH (n) WHERE n.name CONTAINS e MATCH (n)-[r]->(m) RETURN n.name AS s, type(r) AS rel, m.name AS t LIMIT 25",
-                entities=entities)
+                entities=entities
+            )
             kg_context = "\n".join([f"({r['s']})-[:{r['rel']}]->({r['t']})" for r in results])
 
         if not kg_context:
@@ -392,13 +499,16 @@ def generate_comparison():
         else:
             kg_rag_prompt = f"Answer the query using ONLY the facts from the Knowledge Graph context. Be concise, one paragraph, max 150 words. Query: {user_query}\nContext:\n{kg_context}\nAnswer:"
             response = baseten_client.chat.completions.create(
-                model=model_name, messages=[{"role": "user", "content": kg_rag_prompt}], max_tokens=1000)
+                model=model_name,
+                messages=[{"role": "user", "content": kg_rag_prompt}],
+                max_tokens=1000
+            )
             neo4j_kg_rag_answer = response.choices[0].message.content
     except Exception as e:
         neo4j_kg_rag_answer = f"[KG RAG answer generation failed: {e}]"
         print(f"[ERROR] KG RAG answer generation failed: {e}")
 
-    # Corrected Line
+    # Calculate metrics
     docs_for_reference = cached_data.get("docs", [])
     reference_text = ". ".join([doc.get('summary', '') for doc in docs_for_reference if doc.get('summary')])
 
@@ -418,23 +528,26 @@ def generate_comparison():
     }
     cached_data["calculated_metrics"] = calculated_metrics
 
-    return jsonify({
-        "plain_llm_answer": plain_llm_answer,
-        "mongodb_rag_answer": mongodb_rag_answer,
-        "neo4j_kg_rag_answer": neo4j_kg_rag_answer,
-        "calculated_metrics": calculated_metrics
-    })
+    return ComparisonResponse(
+        plain_llm_answer=plain_llm_answer,
+        mongodb_rag_answer=mongodb_rag_answer,
+        neo4j_kg_rag_answer=neo4j_kg_rag_answer,
+        calculated_metrics=calculated_metrics
+    )
 
 
-@app.route("/save_feedback", methods=["POST"])
-def save_feedback():
-    data = request.get_json()
-    session_id, model_type, ratings = data.get("session_id"), data.get("model_type"), data.get("ratings")
+@app.post("/save_feedback", response_model=FeedbackResponse)
+async def save_feedback_endpoint(request: FeedbackRequest):
+    """Save user feedback for model comparison"""
+    session_id = request.session_id
+    model_type = request.model_type
+    ratings = request.ratings
 
     if not all([session_id, model_type, ratings]):
-        return jsonify({"error": "Missing required feedback data."}), 400
+        raise HTTPException(status_code=400, detail="Missing required feedback data.")
+
     if session_id not in comparison_cache:
-        return jsonify({"error": "Session not found or expired."}), 404
+        raise HTTPException(status_code=404, detail="Session not found or expired.")
 
     cached_data = comparison_cache[session_id]
 
@@ -453,21 +566,41 @@ def save_feedback():
 
     global all_metrics
     all_metrics.append(feedback_entry)
+    save_metrics(all_metrics)  # Save immediately
 
     print(f"[INFO] Saved feedback for {model_type} in session {session_id}")
-    return jsonify({"success": True, "message": f"Feedback for {model_type} saved."})
+    return FeedbackResponse(
+        success=True,
+        message=f"Feedback for {model_type} saved."
+    )
 
 
-@app.route("/cleanup/<session_id>", methods=['POST'])
-def cleanup(session_id):
-    with neo4j_driver.session() as session:
-        session.run("MATCH (n {session: $sid}) DETACH DELETE n", sid=session_id)
-    if session_id in comparison_cache:
-        del comparison_cache[session_id]
-    return f"Cleanup complete for session {session_id}"
+@app.delete("/cleanup/{session_id}")
+async def cleanup_endpoint(session_id: str):
+    """Clean up Neo4j session and cache"""
+    try:
+        with neo4j_driver.session() as session:
+            session.run("MATCH (n {session: $sid}) DETACH DELETE n", sid=session_id)
+
+        if session_id in comparison_cache:
+            del comparison_cache[session_id]
+
+        return {"message": f"Cleanup complete for session {session_id}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cleanup failed: {e}")
 
 
-atexit.register(lambda: save_metrics(all_metrics))
+@app.get("/metrics")
+async def get_metrics():
+    """Get all saved feedback metrics"""
+    return {"metrics": all_metrics, "total_entries": len(all_metrics)}
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5001, use_reloader=False)
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "app:app",
+        host="0.0.0.0",
+        port=5001,
+        reload=True,
+        log_level="info"
+    )
