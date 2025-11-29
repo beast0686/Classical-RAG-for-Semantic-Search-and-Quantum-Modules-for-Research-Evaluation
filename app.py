@@ -5,39 +5,59 @@ Advanced RAG system with MongoDB vector search, Neo4j knowledge graph extraction
 and multi-LLM comparison with human feedback collection.
 """
 
+# Core framework imports
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Optional, Dict, Any, List
+from typing import Dict, Any, List
 import uvicorn
+from contextlib import asynccontextmanager
+
+# Database and storage imports
 from pymongo import MongoClient
 from neo4j import GraphDatabase
+
+# Machine learning and NLP imports
 from sentence_transformers import SentenceTransformer
-import uuid
-from dotenv import load_dotenv
-import os
-import re
-import json
-from openai import OpenAI
-import atexit
 import nltk
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from nltk.tokenize import word_tokenize
-from together import Together
-import asyncio
-from contextlib import asynccontextmanager
 
-# Rich Library Integration (SIMPLIFIED & FIXED)
+# LLM API clients
+from openai import OpenAI
+from together import Together
+
+# Utility and system imports
+import uuid
+import os
+import re
+import json
+import atexit
+from dotenv import load_dotenv
+
+# Rich library for enhanced console output
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich import print as rprint
 
-# Initialize Rich console
+# Initialize Rich console for enhanced terminal output
 console = Console()
 
-# Bulletproof print_status function
-def print_status(message: str, status: str = "INFO", emoji: str = ""):
-    """Print formatted status messages - 100% SAFE VERSION."""
+def print_status(message: str, status: str = "INFO", emoji: str = "") -> None:
+    """
+    Print formatted status messages to the console with color coding.
+
+    This function provides a standardized way to display status messages throughout
+    the application with appropriate color coding and formatting.
+
+    Args:
+        message (str): The message to display
+        status (str): The status level (INFO, SUCCESS, WARNING, ERROR, PROCESSING)
+        emoji (str): Optional emoji to display (falls back to predefined emojis)
+
+    Returns:
+        None
+    """
     status_emojis = {
         "INFO": "",
         "SUCCESS": "",
@@ -54,24 +74,36 @@ def print_status(message: str, status: str = "INFO", emoji: str = ""):
         "PROCESSING": "cyan"
     }
 
-    # Use predefined emoji or fallback
     display_emoji = status_emojis.get(status, emoji)
     color = status_colors.get(status, "blue")
-
-    # Build string without dynamic markup
     status_line = f"[{color}]{display_emoji} {status}:[/] {message}"
     console.print(status_line)
 
-# Startup banner
-def print_startup_banner():
-    """Display startup banner - SAFE VERSION."""
+def print_startup_banner() -> None:
+    """
+    Display the application startup banner with formatted output.
+
+    This function prints a visually appealing banner when the application starts,
+    providing clear identification of the service being launched.
+
+    Returns:
+        None
+    """
     console.print("[green]══════════════════════════════════════════════════════════════════════════[/green]")
     console.print("[bold cyan]RAG Knowledge Graph API[/bold cyan]")
     console.print("[green]══════════════════════════════════════════════════════════════════════════[/green]\n")
 
-# NLTK initialization
-def initialize_nltk_safe():
-    """Safe NLTK initialization - no progress bars, no markup issues."""
+def initialize_nltk_safe() -> bool:
+    """
+    Initialize NLTK resources safely with error handling.
+
+    Downloads required NLTK data packages (punkt and punkt_tab) needed for
+    text tokenization in metric calculations. Handles failures gracefully
+    to prevent application crashes.
+
+    Returns:
+        bool: True if NLTK initialization succeeded, False otherwise
+    """
     try:
         print_status("Initializing NLTK resources", "PROCESSING")
         nltk.download('punkt', quiet=True)
@@ -83,17 +115,21 @@ def initialize_nltk_safe():
         print("Continuing without NLTK tokenization...")
         return False
 
-# Initialize NLTK SAFELY
+# Initialize NLTK resources and store availability status
 nltk_available = initialize_nltk_safe()
 
-# Load environment variables
+# Environment Configuration
 print_status("Loading environment variables", "PROCESSING")
+
+# Remove SSL certificate file environment variable if present to avoid conflicts
 os.environ.pop("SSL_CERT_FILE", None)
 load_dotenv()
 
-# Validate environment variables
+# Define required environment variables for application functionality
 required_vars = ["MONGO_URI", "MONGO_DB", "MONGO_COLLECTION", "BASETEN_API_KEY",
                 "NEO4J_URI", "NEO4J_USERNAME", "NEO4J_PASSWORD", "TOGETHER_API_KEY"]
+
+# Validate that all required environment variables are present
 missing_vars = [var for var in required_vars if not os.getenv(var)]
 
 if missing_vars:
@@ -105,34 +141,40 @@ if missing_vars:
 
 print_status("Environment variables loaded successfully", "SUCCESS")
 
-# Display banner
+# Display application startup banner
 print_startup_banner()
 
-# --- Database Connections ---
+# Database Connection Initialization
 print_status("Establishing database connections", "PROCESSING")
 
-# MongoDB
+# MongoDB Atlas Connection Setup
 try:
     mongo_uri = os.getenv("MONGO_URI")
     mongo_db_name = os.getenv("MONGO_DB")
     mongo_collection_name = os.getenv("MONGO_COLLECTION")
+
+    # Establish connection to MongoDB Atlas
     mongo_client = MongoClient(mongo_uri)
     mongo_db = mongo_client[mongo_db_name]
     mongo_collection = mongo_db[mongo_collection_name]
 
+    # Verify connection with ping command
     mongo_client.admin.command('ping')
     print_status("MongoDB connected successfully", "SUCCESS")
 except Exception as e:
     print_status(f"MongoDB connection failed: {str(e)}", "ERROR")
     raise
 
-# Neo4j
+# Neo4j Graph Database Connection Setup
 try:
     neo4j_uri = os.getenv("NEO4J_URI")
     neo4j_user = os.getenv("NEO4J_USERNAME")
     neo4j_password = os.getenv("NEO4J_PASSWORD")
+
+    # Establish connection to Neo4j database
     neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
 
+    # Verify connection with simple query
     with neo4j_driver.session() as session:
         session.run("RETURN 1")
     print_status("Neo4j connected successfully", "SUCCESS")
@@ -140,32 +182,61 @@ except Exception as e:
     print_status(f"Neo4j connection failed: {str(e)}", "ERROR")
     raise
 
-# --- Model Loading ---
+# Sentence Transformer Model Initialization
 print_status("Loading embedding model", "PROCESSING")
 try:
+    # Load the all-MiniLM-L6-v2 model for text embeddings
+    # This model provides good performance with relatively small size (22MB)
     LOCAL_EMBEDDING_MODEL = SentenceTransformer('all-MiniLM-L6-v2')
     print_status("Embedding model loaded successfully", "SUCCESS")
 except Exception as e:
     print_status(f"Model loading failed: {str(e)}", "ERROR")
     raise
 
-# --- Cache & Metrics ---
-comparison_cache = {}
-METRICS_FILE = 'feedback_metrics.json'
+# Global Cache and Metrics Configuration
+comparison_cache = {}  # In-memory cache for session data
+METRICS_FILE = 'feedback_metrics.json'  # Persistent storage file for user feedback
 
-# --- Pydantic Models (UNCHANGED) ---
+# Pydantic Data Models for API Request/Response Validation
 class QueryRequest(BaseModel):
+    """
+    Request model for document query operations.
+
+    Attributes:
+        query (str): The search query text
+        k (int): Number of documents to retrieve (default: 10)
+    """
     query: str
     k: int = 10
 
 class ComparisonRequest(BaseModel):
+    """
+    Request model for generating LLM comparison responses.
+
+    Attributes:
+        session_id (str): Unique session identifier from previous query
+    """
     session_id: str
 
 class SingleFeedback(BaseModel):
+    """
+    Model for individual feedback entry on a specific LLM approach.
+
+    Attributes:
+        model_type (str): Type of model being rated (plain_llm, mongodb_rag, neo4j_kg_rag)
+        ratings (Dict[str, int]): Dictionary of rating categories and scores (1-5 scale)
+    """
     model_type: str
     ratings: Dict[str, int]
 
 class FeedbackRequest(BaseModel):
+    """
+    Request model for submitting user feedback on LLM responses.
+
+    Attributes:
+        session_id (str): Unique session identifier from query
+        feedbacks (List[SingleFeedback]): List of feedback entries for different models
+    """
     session_id: str
     feedbacks: List[SingleFeedback]
 
@@ -184,9 +255,11 @@ class FeedbackRequest(BaseModel):
         }
 
 class CleanupRequest(BaseModel):
+    """Request model for session cleanup operations."""
     session_id: str
 
 class QueryResponse(BaseModel):
+    """Response model for document query operations."""
     retrieved_docs: List[Dict[str, Any]]
     nodes: List[Dict[str, Any]]
     edges: List[Dict[str, Any]]
@@ -194,21 +267,33 @@ class QueryResponse(BaseModel):
     answer: str
 
 class ComparisonResponse(BaseModel):
+    """Response model for LLM comparison results."""
     plain_llm_answer: str
     mongodb_rag_answer: str
     neo4j_kg_rag_answer: str
     calculated_metrics: Dict[str, Dict[str, float]]
 
 class FeedbackResponse(BaseModel):
+    """Response model for feedback submission operations."""
     success: bool
     message: str
 
 class HealthResponse(BaseModel):
+    """Response model for health check operations."""
     status: str
     message: str
 
-# --- Utility Functions (SAFE VERSIONS) ---
+# Utility Functions for Metrics and Data Management
 def load_metrics():
+    """
+    Load existing feedback metrics from persistent storage.
+
+    Attempts to load metrics data from the configured JSON file. If the file
+    doesn't exist or is corrupted, returns an empty list to start fresh.
+
+    Returns:
+        list: List of previously saved metric entries, or empty list if none exist
+    """
     if os.path.exists(METRICS_FILE):
         try:
             with open(METRICS_FILE, 'r') as f:
@@ -221,6 +306,15 @@ def load_metrics():
     return []
 
 def save_metrics(data):
+    """
+    Save feedback metrics to persistent storage.
+
+    Writes the provided metrics data to a JSON file for persistence across
+    application restarts. Handles write failures gracefully.
+
+    Args:
+        data (list): List of metric entries to save
+    """
     try:
         with open(METRICS_FILE, 'w') as f:
             json.dump(data, f, indent=4)
@@ -229,13 +323,36 @@ def save_metrics(data):
         print_status(f"Metrics save failed: {str(e)}", "ERROR")
 
 def validate_feedback_ratings(ratings: Dict[str, int]) -> bool:
-    """Validate that feedback ratings contain the exact required keys."""
+    """
+    Validate that feedback ratings contain the exact required keys.
+
+    Checks if all required rating categories are present in the provided ratings.
+
+    Args:
+        ratings (Dict[str, int]): Dictionary of rating categories and scores
+
+    Returns:
+        bool: True if all required keys are present, False otherwise
+    """
     required_keys = {"accuracy", "completeness", "coherence", "helpfulness"}
     received_keys = set(ratings.keys())
     return required_keys.issubset(received_keys)
 
-# Safe metric calculations
+# Automated Metrics Calculation Functions
 def calculate_rouge_l_f1(candidate, reference):
+    """
+    Calculate ROUGE-L F1 score between candidate and reference texts.
+
+    ROUGE-L measures the longest common subsequence (LCS) between two texts.
+    This implementation uses token-level comparison for computational efficiency.
+
+    Args:
+        candidate (str): Generated text to evaluate
+        reference (str): Ground truth reference text
+
+    Returns:
+        float: F1 score between 0.0 and 1.0 (rounded to 4 decimal places)
+    """
     if not candidate or not reference:
         return 0.0
     try:
@@ -254,6 +371,19 @@ def calculate_rouge_l_f1(candidate, reference):
         return 0.0
 
 def calculate_bleu(candidate, reference):
+    """
+    Calculate BLEU score between candidate and reference texts.
+
+    BLEU (Bilingual Evaluation Understudy) measures n-gram overlap between
+    generated and reference text. Uses smoothing to handle zero n-gram matches.
+
+    Args:
+        candidate (str): Generated text to evaluate
+        reference (str): Ground truth reference text
+
+    Returns:
+        float: BLEU score between 0.0 and 1.0 (rounded to 4 decimal places)
+    """
     if not candidate or not reference:
         return 0.0
     try:
@@ -269,20 +399,32 @@ def calculate_bleu(candidate, reference):
         return 0.0
 
 def extract_json_from_string(s):
+    """
+    Extract and parse JSON content from a string that may contain additional text.
+
+    This function handles LLM responses that may include JSON within explanatory
+    text by trying multiple parsing strategies to extract valid JSON objects.
+
+    Args:
+        s (str): Input string potentially containing JSON
+
+    Returns:
+        dict or None: Parsed JSON object if extraction successful, None otherwise
+    """
     try:
         if s.strip().startswith('{') and s.strip().endswith('}'):
             return json.loads(s.strip())
-        match = re.search(r'\{.*\}', s, re.DOTALL)
+        match = re.search(r'{.*}', s, re.DOTALL)
         if match:
             return json.loads(match.group(0))
         return json.loads(s.strip())
     except:
         return None
 
-# Load metrics
+# Load existing metrics data at application startup
 all_metrics = load_metrics()
 
-# --- FastAPI App ---
+# FastAPI Application Configuration and Lifecycle Management
 app = FastAPI(
     title="RAG Knowledge Graph API",
     version="1.0.0",
@@ -303,10 +445,16 @@ async def lifespan(app: FastAPI):
 
 app.router.lifespan_context = lifespan
 
-# --- API Endpoints ---
+# API Endpoint Definitions
 
 @app.get("/", response_model=HealthResponse)
 async def root():
+    """
+    Root endpoint providing basic API status and documentation link.
+
+    Returns:
+        HealthResponse: Basic service status and navigation information
+    """
     print_status("Root endpoint accessed", "INFO")
     return HealthResponse(
         status="success",
@@ -315,6 +463,12 @@ async def root():
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
+    """
+    Health check endpoint for service monitoring and load balancer probes.
+
+    Returns:
+        HealthResponse: Service health status with process ID
+    """
     print_status("Health check", "INFO")
     return HealthResponse(
         status="healthy",
@@ -324,6 +478,26 @@ async def health_check():
 
 @app.post("/query", response_model=QueryResponse)
 async def query_endpoint(request: QueryRequest):
+    """
+    Primary query endpoint that performs vector search, knowledge graph extraction, and answer generation.
+
+    This endpoint orchestrates the complete RAG pipeline:
+    1. Generates embeddings for the input query
+    2. Performs MongoDB vector search for relevant documents
+    3. Extracts knowledge graph entities and relationships
+    4. Generates MongoDB RAG answer using retrieved context
+    5. Persists knowledge graph to Neo4j
+    6. Calculates baseline metrics for evaluation
+
+    Args:
+        request (QueryRequest): Query request containing search text and parameters
+
+    Returns:
+        QueryResponse: Complete response with documents, graph data, and generated answer
+
+    Raises:
+        HTTPException: For empty queries, embedding failures, or search errors
+    """
     print_status(f"Query: '{request.query}' (k={request.k})", "INFO")
 
     user_query = request.query.strip()
@@ -332,7 +506,7 @@ async def query_endpoint(request: QueryRequest):
     if not user_query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
 
-    # Generate embedding
+    # Generate query embedding using SentenceTransformer model
     try:
         print_status("Generating query embedding", "PROCESSING")
         query_vector = LOCAL_EMBEDDING_MODEL.encode(user_query, normalize_embeddings=True).tolist()
@@ -602,9 +776,28 @@ Answer:"""
         answer=paragraph_answer
     )
 
-# --- Other Endpoints (IMPLEMENTED EXACTLY AS ORIGINAL) ---
 @app.post("/generate_comparison", response_model=ComparisonResponse)
 async def generate_comparison_endpoint(request: ComparisonRequest):
+    """
+    Generate LLM comparison responses using three different approaches.
+
+    This endpoint creates responses from three different RAG approaches:
+    1. Plain LLM - Direct query without retrieval augmentation
+    2. MongoDB RAG - Uses retrieved documents as context (cached from /query)
+    3. Neo4j KG RAG - Uses knowledge graph relationships for enhanced context
+
+    The endpoint also computes automated metrics (BLEU, ROUGE-L) comparing
+    each approach against reference text derived from retrieved documents.
+
+    Args:
+        request (ComparisonRequest): Request containing session ID from previous query
+
+    Returns:
+        ComparisonResponse: Responses from all three approaches with calculated metrics
+
+    Raises:
+        HTTPException: If session ID is not found in cache
+    """
     print_status(f"Comparison for session: {request.session_id}", "INFO")
 
     session_id = request.session_id
@@ -614,10 +807,12 @@ async def generate_comparison_endpoint(request: ComparisonRequest):
     cached_data = comparison_cache[session_id]
     user_query = cached_data["query"]
 
-    # Plain LLM (use cached if available, otherwise compute)
+    # Generate Plain LLM Response (no retrieval augmentation)
+    # Uses cached answer if available to avoid redundant API calls
     plain_llm_answer = cached_data.get("plain_llm_answer", "[No cached answer]")
     if plain_llm_answer == "[No cached answer]":
         try:
+            # Generate response using only the query without any context
             client = OpenAI(api_key=os.getenv("BASETEN_API_KEY"), base_url="https://inference.baseten.co/v1")
             response = client.chat.completions.create(
                 model="moonshotai/Kimi-K2-Instruct-0905",
@@ -625,26 +820,30 @@ async def generate_comparison_endpoint(request: ComparisonRequest):
                 max_tokens=1000
             )
             plain_llm_answer = response.choices[0].message.content
-            # Update cache
             cached_data["plain_llm_answer"] = plain_llm_answer
         except Exception as e:
             plain_llm_answer = f"[Plain LLM failed: {str(e)}]"
 
+    # Retrieve MongoDB RAG answer from cache (generated in /query endpoint)
     mongodb_rag_answer = cached_data.get("mongodb_rag_answer", "[No answer]")
 
-    # KG RAG
+    # Generate Neo4j Knowledge Graph RAG Response
+    # Uses relationship data from Neo4j to provide context-aware answers
     neo4j_kg_rag_answer = "No entities extracted"
     try:
         entities = cached_data.get("extracted_entities", [])
         if entities:
+            # Query Neo4j for relationships involving extracted entities
             with neo4j_driver.session() as session:
                 results = session.run(
                     "UNWIND $entities AS e MATCH (n) WHERE n.name CONTAINS e MATCH (n)-[r]->(m) RETURN n.name AS s, type(r) AS rel, m.name AS t LIMIT 25",
                     entities=entities
                 )
+                # Format relationships as structured context
                 kg_context = "\n".join([f"({r['s']})-[:{r['rel']}]->({r['t']})" for r in results])
 
             if kg_context:
+                # Generate answer using knowledge graph relationships as context
                 client = OpenAI(api_key=os.getenv("BASETEN_API_KEY"), base_url="https://inference.baseten.co/v1")
                 response = client.chat.completions.create(
                     model="moonshotai/Kimi-K2-Instruct-0905",
@@ -658,7 +857,7 @@ async def generate_comparison_endpoint(request: ComparisonRequest):
             neo4j_kg_rag_answer = "No entities extracted"
     except Exception as e:
         neo4j_kg_rag_answer = f"[KG RAG failed: {str(e)}]"
-
+    # Calculate and update Neo4j KG RAG metrics against reference text
     reference_text = cached_data.get("reference_text", "")
     if reference_text:
         cached_data["calculated_metrics"]["neo4j_kg_rag"] = {
@@ -666,7 +865,7 @@ async def generate_comparison_endpoint(request: ComparisonRequest):
             "rouge_l": calculate_rouge_l_f1(neo4j_kg_rag_answer, reference_text)
         }
 
-    # Return final metrics
+    # Retrieve final calculated metrics for all approaches
     metrics = cached_data.get("calculated_metrics", {})
 
     return ComparisonResponse(
@@ -676,8 +875,25 @@ async def generate_comparison_endpoint(request: ComparisonRequest):
         calculated_metrics=metrics
     )
 
-@app.post("/save_feedback", response_model=FeedbackResponse)
+@app.post("/human_feedback", response_model=FeedbackResponse)
 async def save_feedback_endpoint(request: FeedbackRequest):
+    """
+    Save user feedback for LLM responses with validation and persistence.
+
+    This endpoint processes user ratings for different RAG approaches and stores
+    them alongside the automatically calculated metrics for research evaluation.
+    Each feedback entry includes human ratings on accuracy, completeness,
+    coherence, and helpfulness scales.
+
+    Args:
+        request (FeedbackRequest): Feedback data including session ID and ratings
+
+    Returns:
+        FeedbackResponse: Success status and count of saved entries
+
+    Raises:
+        HTTPException: If session is not found in cache
+    """
     print_status(f"Saving {len(request.feedbacks)} feedback entries for session: {request.session_id}", "INFO")
 
     if request.session_id not in comparison_cache:
@@ -687,12 +903,13 @@ async def save_feedback_endpoint(request: FeedbackRequest):
     saved_count = 0
 
     for fb in request.feedbacks:
-        # Validate required rating keys
+        # Validate that all required rating categories are present
         required_keys = {"accuracy", "completeness", "coherence", "helpfulness"}
         if not required_keys.issubset(fb.ratings.keys()):
             print_status(f"Invalid ratings for {fb.model_type}: missing keys", "WARNING")
             continue
 
+        # Create structured feedback entry combining human ratings with automated metrics
         feedback_entry = {
             "session_id": request.session_id,
             "query": cached_data.get("query"),
@@ -707,6 +924,7 @@ async def save_feedback_endpoint(request: FeedbackRequest):
             "timestamp": str(uuid.uuid4())
         }
 
+        # Add to global metrics collection for persistence
         global all_metrics
         all_metrics.append(feedback_entry)
         saved_count += 1
@@ -715,14 +933,47 @@ async def save_feedback_endpoint(request: FeedbackRequest):
     print_status(f"Successfully saved {saved_count} feedback entries", "SUCCESS")
     return FeedbackResponse(success=True, message=f"Saved {saved_count} feedback entries")
 
+@app.get("/save-metrics")
+async def get_metrics():
+    """
+    Retrieve all collected feedback metrics for analysis and research.
+
+    This endpoint returns the complete collection of user feedback and
+    automatically calculated metrics across all sessions for research
+    evaluation and model performance analysis.
+
+    Returns:
+        dict: Complete metrics collection with total count
+    """
+    print_status(f"Returning {len(all_metrics)} metrics", "INFO")
+    return {"metrics": all_metrics, "total_entries": len(all_metrics)}
+
 @app.delete("/cleanup/{session_id}")
 async def cleanup_endpoint(session_id: str):
+    """
+    Clean up session-specific data from Neo4j and memory cache.
+
+    This endpoint removes all Neo4j nodes and relationships associated with
+    a specific session and clears the corresponding cache entry to free
+    up system resources.
+
+    Args:
+        session_id (str): The session identifier to clean up
+
+    Returns:
+        dict: Confirmation message of cleanup completion
+
+    Raises:
+        HTTPException: If cleanup operations fail
+    """
     print_status(f"Cleaning up session: {session_id}", "INFO")
 
     try:
+        # Remove session-specific nodes and relationships from Neo4j
         with neo4j_driver.session() as session:
             result = session.run("MATCH (n {session: $sid}) DETACH DELETE n", sid=session_id)
 
+        # Clear session data from in-memory cache
         if session_id in comparison_cache:
             del comparison_cache[session_id]
 
@@ -731,18 +982,27 @@ async def cleanup_endpoint(session_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Cleanup failed: {str(e)}")
 
-@app.get("/metrics")
-async def get_metrics():
-    print_status(f"Returning {len(all_metrics)} metrics", "INFO")
-    return {"metrics": all_metrics, "total_entries": len(all_metrics)}
-
-# Cleanup on exit
+# Application Shutdown and Cleanup Configuration
 def cleanup_on_exit():
+    """
+    Perform cleanup operations when the application shuts down.
+
+    Ensures that all collected metrics are persisted to disk before
+    the application terminates to prevent data loss.
+    """
     save_metrics(all_metrics)
 
+# Register cleanup function to run on application exit
 atexit.register(cleanup_on_exit)
 
 if __name__ == "__main__":
+    """
+    Application entry point for direct execution.
+    
+    Starts the FastAPI server with Uvicorn on localhost:5001 with hot reload
+    enabled for development. The server provides automatic API documentation
+    at the /docs endpoint.
+    """
     print_status("Starting FastAPI server", "SUCCESS")
     console.print("[bold green]Server ready at http://localhost:5001/docs[/bold green]\n")
 
