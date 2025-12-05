@@ -13,6 +13,7 @@ const HomePage: React.FC = () => {
   const { mutateAsync, isPending, error } = useQueryApi();
   const setSession = useSessionStore((s) => s.setSession);
   const setLastResult = useSessionStore((s) => s.setLastResult);
+  const setLastComparison = useSessionStore((s) => s.setLastComparison);
   const lastQuery = useSessionStore((s) => s.lastQuery);
   const lastDocs = useSessionStore((s) => s.lastDocs);
   const lastNodes = useSessionStore((s) => s.lastNodes);
@@ -26,6 +27,8 @@ const HomePage: React.FC = () => {
     const res: QueryResponse = await mutateAsync({ query, k });
     setSession(res.session_id, query);
     setLastResult(res.retrieved_docs, res.nodes, res.edges, res.answer);
+    // Clear comparison data when a new session is created
+    setLastComparison(null);
   };
 
   const openDoc = (doc: RetrievedDoc) => {

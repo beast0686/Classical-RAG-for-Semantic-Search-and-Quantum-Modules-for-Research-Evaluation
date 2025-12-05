@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { RetrievedDoc, GraphNode, GraphEdge } from '../api/query';
+import type { ComparisonResponse } from '../api/comparison';
 
 type SessionState = {
   sessionId: string | null;
@@ -10,8 +11,10 @@ type SessionState = {
   lastNodes: GraphNode[];
   lastEdges: GraphEdge[];
   lastAnswer: string;
+  lastComparison: ComparisonResponse | null;
   setSession: (sessionId: string | null, lastQuery?: string) => void;
   setLastResult: (docs: RetrievedDoc[], nodes: GraphNode[], edges: GraphEdge[], answer: string) => void;
+  setLastComparison: (comparison: ComparisonResponse | null) => void;
   setReduceMotion: (value: boolean) => void;
 };
 
@@ -25,6 +28,7 @@ export const useSessionStore = create<SessionState>()(
       lastNodes: [],
       lastEdges: [],
       lastAnswer: '',
+      lastComparison: null,
       setSession: (sessionId, lastQuery = '') =>
         set({
           sessionId,
@@ -36,6 +40,10 @@ export const useSessionStore = create<SessionState>()(
           lastNodes: nodes,
           lastEdges: edges,
           lastAnswer: answer,
+        }),
+      setLastComparison: (comparison) =>
+        set({
+          lastComparison: comparison,
         }),
       setReduceMotion: (value) =>
         set({

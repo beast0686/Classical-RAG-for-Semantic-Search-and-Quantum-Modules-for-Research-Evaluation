@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGenerateComparison } from '../api/comparison';
 import { useSubmitFeedback } from '../api/feedback';
 import { useSessionStore } from '../hooks/useSessionStore';
@@ -11,14 +11,27 @@ import FeedbackForm from '../components/feedback/FeedbackForm';
 
 const ComparisonPage: React.FC = () => {
   const sessionId = useSessionStore((s) => s.sessionId);
-  const { mutateAsync, data, isPending, error } = useGenerateComparison();
+  const lastComparison = useSessionStore((s) => s.lastComparison);
+  const setLastComparison = useSessionStore((s) => s.setLastComparison);
+  const { mutateAsync, data: newData, isPending, error } = useGenerateComparison();
   const feedbackMutation = useSubmitFeedback();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
+  // Use cached data if available, otherwise use new data
+  const data = newData || lastComparison;
+
+  // Save comparison data to session store when new data is received
+  useEffect(() => {
+    if (newData) {
+      setLastComparison(newData);
+    }
+  }, [newData, setLastComparison]);
+
   const handleRunComparison = async () => {
     if (!sessionId) return;
-    await mutateAsync({ session_id: sessionId });
+    const result = await mutateAsync({ session_id: sessionId });
+    setLastComparison(result);
   };
 
   const handleSubmitFeedback = async (entries: Parameters<typeof FeedbackForm>[0]['onSubmit'] extends (
