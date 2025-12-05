@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ComparisonResponse } from '../../api/comparison';
 import Button from '../common/Button';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   data: ComparisonResponse;
@@ -15,12 +16,6 @@ const labelMap: Record<ColumnKey, string> = {
 };
 
 const ComparisonPanel: React.FC<Props> = ({ data }) => {
-  const [expanded, setExpanded] = useState<Record<ColumnKey, boolean>>({
-    plain_llm: false,
-    mongodb_rag: false,
-    neo4j_kg_rag: false,
-  });
-
   const handleCopy = async (text: string) => {
     if (!navigator.clipboard) return;
     await navigator.clipboard.writeText(text);
@@ -39,24 +34,18 @@ const ComparisonPanel: React.FC<Props> = ({ data }) => {
           <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
             Model Comparison
           </h2>
-          <p className="mt-1 text-xs text-text-muted">
-            Compare the baseline plain LLM, MongoDB RAG, and Neo4j KG RAG answers.
-          </p>
         </div>
       </header>
 
       <div className="grid gap-4 lg:grid-cols-3">
         {rows.map((row) => {
           const metric = data.calculated_metrics[row.key];
-          const isExpanded = expanded[row.key];
           const answer = row.answer ?? '';
-          const shortAnswer =
-            answer && !isExpanded && answer.length > 260 ? `${answer.slice(0, 260)}…` : answer;
 
           return (
             <div
               key={row.key}
-              className="flex flex-col rounded-2xl border border-slate-100 bg-slate-50/80 p-3 text-sm"
+              className="flex flex-col rounded-2xl border border-slate-100 bg-slate-50/80 p-3 text-sm h-[340px]"
             >
               <div className="mb-2 flex items-center justify-between gap-2">
                 <div>
@@ -80,27 +69,13 @@ const ComparisonPanel: React.FC<Props> = ({ data }) => {
                   Copy
                 </Button>
               </div>
-              <div className="flex-1 text-xs text-text-main">
+              <div className="flex-1 overflow-y-auto text-xs text-text-main custom-scrollbar p-1 rounded">
                 {answer ? (
-                  <p>{shortAnswer}</p>
+                  <ReactMarkdown>{answer}</ReactMarkdown>
                 ) : (
                   <p className="text-text-muted">No answer available.</p>
                 )}
               </div>
-              {answer && answer.length > 260 && (
-                <button
-                  type="button"
-                  className="mt-2 self-start text-[11px] font-medium text-primary hover:text-primary-hover"
-                  onClick={() =>
-                    setExpanded((prev) => ({
-                      ...prev,
-                      [row.key]: !prev[row.key],
-                    }))
-                  }
-                >
-                  {isExpanded ? 'Collapse' : 'Expand'}
-                </button>
-              )}
             </div>
           );
         })}
@@ -110,5 +85,3 @@ const ComparisonPanel: React.FC<Props> = ({ data }) => {
 };
 
 export default ComparisonPanel;
-
-

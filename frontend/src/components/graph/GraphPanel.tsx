@@ -406,15 +406,12 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
       <header className="mb-2 flex items-center justify-between gap-2 flex-shrink-0">
         <div className="flex-1">
           <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Knowledge Graph</h2>
-          <p className="mt-1 text-xs text-text-muted">
-            Explore the entities and relationships extracted from the retrieved documents.
-          </p>
         </div>
 
         {/* Legend */}
         {nodes.length > 0 && (
           <div className="flex flex-col gap-1">
-            <div className="text-xs font-medium text-slate-600 mb-1">Legend</div>
+            {/*<div className="text-xs font-medium text-slate-600 mb-1">Legend</div>*/}
             <div className="flex flex-wrap gap-2">
               {uniqueNodeTypes.map((nodeType) => (
                 <div key={nodeType} className="flex items-center gap-1">

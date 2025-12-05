@@ -48,20 +48,13 @@ const ComparisonPage: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-5">
+      <div className="flex flex-col min-h-screen w-full gap-5 px-12 py-6 bg-background">
       <section className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold text-text-main">Model comparison</h2>
-          <p className="text-xs text-text-muted">
-            Generate answers from three approaches and compare them with automated metrics.
-          </p>
         </div>
         <div className="flex items-center gap-2">
           <div className="text-[11px] text-text-muted">
-            <span className="mr-1 font-medium text-slate-500">Session</span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 font-mono text-[11px] text-slate-700">
-              {sessionId ? `${sessionId.slice(0, 8)}…` : 'None'}
-            </span>
           </div>
           <Button
             type="button"
@@ -89,10 +82,7 @@ const ComparisonPage: React.FC = () => {
           <ComparisonPanel data={data} />
           <MetricsTable metrics={data.calculated_metrics} />
 
-          <div className="mt-4 flex items-center justify-between gap-3">
-            <div className="text-xs text-text-muted">
-              Provide human ratings to log subjective quality alongside automated scores.
-            </div>
+          <div className="mt-4 flex items-center justify-center gap-3">
             <Button
               type="button"
               variant="secondary"
@@ -135,5 +125,3 @@ const ComparisonPage: React.FC = () => {
 };
 
 export default ComparisonPage;
-
-
