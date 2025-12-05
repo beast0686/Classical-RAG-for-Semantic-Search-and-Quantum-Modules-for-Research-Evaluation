@@ -33,7 +33,7 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
     }
 
     const width = containerRef.current.clientWidth;
-    const height = 500; // taller graph area
+    const height = containerRef.current.clientHeight; // dynamic height based on container
 
     // Clear previous render
     d3.select(svgRef.current).selectAll('*').remove();
@@ -363,10 +363,12 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         const newWidth = containerRef.current!.clientWidth;
-        svg.attr('width', newWidth).attr('viewBox', `0 0 ${newWidth} ${height}`);
-        simulation.force('center', d3.forceCenter(newWidth / 2, height / 2).strength(0.1));
+        const newHeight = containerRef.current!.clientHeight;
+        svg.attr('width', newWidth).attr('height', newHeight).attr('viewBox', `0 0 ${newWidth} ${newHeight}`);
+        simulation.force('center', d3.forceCenter(newWidth / 2, newHeight / 2).strength(0.1));
         simulation.force('x', d3.forceX(newWidth / 2).strength(0.01));
-        simulation.force('radial', d3.forceRadial(Math.min(newWidth, height) * 0.35, newWidth / 2, height / 2).strength(0.05));
+        simulation.force('y', d3.forceY(newHeight / 2).strength(0.01));
+        simulation.force('radial', d3.forceRadial(Math.min(newWidth, newHeight) * 0.35, newWidth / 2, newHeight / 2).strength(0.05));
         if (simulation.alpha() < 0.1) {
           simulation.alpha(0.1).restart();
         }
@@ -386,17 +388,49 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
     };
   }, [nodes, edges, onSelectDocument]);
 
+  // Node type colors for legend
+  const nodeTypeColors = {
+    Document: '#7C3AED',
+    Person: '#2563EB',
+    Organization: '#0EA5A4',
+    Technology: '#16A34A',
+    Inferred: '#6B7280',
+    Center: '#CBD5F5'
+  };
+
+  // Get unique node types from current nodes for legend
+  const uniqueNodeTypes = [...new Set(nodes.map(node => node.group))];
+
   return (
-    <section className="glass-card flex min-h-[560px] flex-col rounded-2xl border border-slate-100 bg-card/80 p-4 shadow-soft">
-      <header className="mb-2 flex items-center justify-between gap-2">
-        <div>
+    <section className="glass-card flex h-full flex-col rounded-2xl border border-slate-100 bg-card/80 p-4 shadow-soft">
+      <header className="mb-2 flex items-center justify-between gap-2 flex-shrink-0">
+        <div className="flex-1">
           <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Knowledge Graph</h2>
           <p className="mt-1 text-xs text-text-muted">
             Explore the entities and relationships extracted from the retrieved documents.
           </p>
         </div>
+
+        {/* Legend */}
+        {nodes.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <div className="text-xs font-medium text-slate-600 mb-1">Legend</div>
+            <div className="flex flex-wrap gap-2">
+              {uniqueNodeTypes.map((nodeType) => (
+                <div key={nodeType} className="flex items-center gap-1">
+                  <div
+                    className="w-3 h-3 rounded-full border border-white"
+                    style={{ backgroundColor: nodeTypeColors[nodeType as keyof typeof nodeTypeColors] || '#CBD5F5' }}
+                  />
+                  <span className="text-xs text-slate-600">{nodeType}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
-      <div ref={containerRef} className="mt-2 h-[500px] w-full rounded-xl border border-slate-100 bg-slate-50 overflow-hidden relative">
+
+      <div ref={containerRef} className="mt-2 flex-1 w-full rounded-xl border border-slate-100 bg-slate-50 overflow-hidden relative">
         {nodes.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-xs text-text-muted">No graph data available. Run a query to see the knowledge graph.</p>

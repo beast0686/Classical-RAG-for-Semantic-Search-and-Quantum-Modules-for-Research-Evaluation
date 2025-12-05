@@ -84,30 +84,35 @@ const HomePage: React.FC = () => {
       : baseGraphEdges;
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-5">
-      <section className="space-y-3">
-        <div>
-          <h2 className="text-base font-semibold text-text-main">Query your RAG pipeline</h2>
-          <p className="text-xs text-text-muted">
-            Run semantic search, visualize the knowledge graph, and compare answers across models.
-          </p>
+    <div className="mx-auto flex max-w-full h-[calc(100vh-8rem)] flex-col xl:flex-row gap-6 px-4">
+      {/* Left Side - All components except Knowledge Graph */}
+      <div className="flex-1 flex flex-col gap-6 xl:pr-8 xl:border-r border-slate-200 px-6">
+        {/* Fixed sections at top */}
+        <div className="flex-shrink-0 space-y-6">
+          <section className="space-y-3">
+            <div>
+              {/*<h2 className="text-base font-semibold text-text-main">Query your RAG pipeline</h2>*/}
+              {/*<p className="text-xs text-text-muted">*/}
+              {/*  Run semantic search, visualize the knowledge graph, and compare answers across models.*/}
+              {/*</p>*/}
+            </div>
+            <SearchBar onSubmit={handleSubmit} initialQuery={lastQuery} loading={isPending} />
+          </section>
+
+          {isPending && !hasDocs && (
+            <div className="flex items-center gap-3">
+              <LoadingSpinner label="Embedding → retrieval → KG extraction → answer…" />
+            </div>
+          )}
+
+          {error && <ErrorState message={error.message} />}
+
+          <AnswerPanel answer={lastAnswer} loading={isPending && !lastAnswer} />
         </div>
-        <SearchBar onSubmit={handleSubmit} initialQuery={lastQuery} loading={isPending} />
-      </section>
 
-      {isPending && !hasDocs && (
-        <div className="flex items-center gap-3">
-          <LoadingSpinner label="Embedding → retrieval → KG extraction → answer…" />
-        </div>
-      )}
-
-      {error && <ErrorState message={error.message} />}
-
-      <AnswerPanel answer={lastAnswer} loading={isPending && !lastAnswer} />
-
-      <section className="grid gap-4 lg:grid-cols-3">
-        <div className="space-y-3 lg:col-span-1">
-          <header className="flex items-center justify-between gap-2">
+        {/* Scrollable Retrieved Documents section */}
+        <section className="flex-1 min-h-0 flex flex-col space-y-3">
+          <header className="flex-shrink-0 flex items-center justify-between gap-2">
             <div>
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Retrieved Documents</h2>
               <p className="mt-1 text-xs text-text-muted">
@@ -116,19 +121,25 @@ const HomePage: React.FC = () => {
             </div>
           </header>
           {hasDocs ? (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {lastDocs.map((doc) => (
-                <DocCard key={doc.id} doc={doc} onClick={() => openDoc(doc)} />
-              ))}
+            <div className="overflow-y-auto flex-1 pr-2 custom-scrollbar">
+              <div className="grid gap-3 sm:grid-cols-1 lg:grid-cols-2">
+                {lastDocs.map((doc) => (
+                  <DocCard key={doc.id} doc={doc} onClick={() => openDoc(doc)} />
+                ))}
+              </div>
             </div>
           ) : (
             <p className="text-xs text-text-muted">Documents will appear here after you run a query.</p>
           )}
-        </div>
-        <div className="lg:col-span-2">
+        </section>
+      </div>
+
+      {/* Right Side - Knowledge Graph */}
+      <div className="w-full xl:w-1/2 flex-shrink-0 px-6 min-h-[400px] xl:min-h-0">
+        <div className="h-full">
           <GraphPanel nodes={graphNodes} edges={graphEdges} onSelectDocument={onSelectDocFromGraph} />
         </div>
-      </section>
+      </div>
 
       <DocModal open={modalOpen} doc={selectedDoc} onClose={() => setModalOpen(false)} />
     </div>

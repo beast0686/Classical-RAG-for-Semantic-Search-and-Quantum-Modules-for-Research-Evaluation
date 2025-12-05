@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
@@ -10,7 +10,7 @@ type Props = {
 
 const SearchBar: React.FC<Props> = ({ initialQuery = '', onSubmit, loading }) => {
   const [query, setQuery] = useState(initialQuery);
-  const [k, setK] = useState(10);
+  const [k, setK] = useState(5);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -33,15 +33,26 @@ const SearchBar: React.FC<Props> = ({ initialQuery = '', onSubmit, loading }) =>
         />
       </div>
       <div className="flex items-end gap-3">
-        <Input
-          label="k"
-          type="number"
-          min={1}
-          max={50}
-          value={k}
-          onChange={(e) => setK(Number(e.target.value) || 10)}
-          className="w-20 text-center"
-        />
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-text-main">
+            Documents (k = {k})
+          </label>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-text-muted">2</span>
+            <input
+              type="range"
+              min="2"
+              max="20"
+              value={k}
+              onChange={(e) => setK(Number(e.target.value))}
+              className="w-24 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
+              style={{
+                background: `linear-gradient(to right, #2563eb 0%, #2563eb ${((k-2)/(20-2))*100}%, #e2e8f0 ${((k-2)/(20-2))*100}%, #e2e8f0 100%)`
+              }}
+            />
+            <span className="text-xs text-text-muted">20</span>
+          </div>
+        </div>
         <Button type="submit" loading={loading}>
           {loading ? 'Running pipeline…' : 'Search'}
         </Button>

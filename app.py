@@ -284,6 +284,12 @@ class HealthResponse(BaseModel):
     status: str
     message: str
 
+class DatabaseStatsResponse(BaseModel):
+    """Response model for database statistics."""
+    total_documents: int
+    collection_name: str
+    last_updated: str | None = None
+
 # Utility Functions for Metrics and Data Management
 def load_metrics():
     """
@@ -492,6 +498,34 @@ async def health_check():
         message=f"API running (PID: {os.getpid()})"
     )
 
+@app.get("/database/stats", response_model=DatabaseStatsResponse)
+async def get_database_stats():
+    """
+    Get database statistics including total document count.
+
+    Returns:
+        DatabaseStatsResponse: Database statistics with document count and collection info
+    """
+    try:
+        print_status("Fetching database statistics", "INFO")
+
+        # Get total document count from MongoDB collection
+        total_documents = mongo_collection.count_documents({})
+
+        # Get collection name
+        collection_name = mongo_collection_name
+
+        print_status(f"Database stats: {total_documents} documents in {collection_name}", "SUCCESS")
+
+        return DatabaseStatsResponse(
+            total_documents=total_documents,
+            collection_name=collection_name,
+            last_updated=None  # Could add timestamp if needed
+        )
+
+    except Exception as e:
+        print_status(f"Failed to fetch database statistics: {str(e)}", "ERROR")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch database statistics: {str(e)}")
 
 @app.post("/query", response_model=QueryResponse)
 async def query_endpoint(request: QueryRequest):

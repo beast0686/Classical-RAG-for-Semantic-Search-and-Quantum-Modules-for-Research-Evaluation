@@ -9,9 +9,9 @@ const AnswerPanel: React.FC<Props> = ({ answer, loading }) => {
       <header className="mb-2 flex items-center justify-between gap-2">
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">MongoDB RAG Answer</h2>
-          <p className="mt-1 text-xs text-text-muted">
-            Concise answer generated from the retrieved document context.
-          </p>
+          {/*<p className="mt-1 text-xs text-text-muted">*/}
+          {/*  Concise answer generated from the retrieved document context.*/}
+          {/*</p>*/}
         </div>
       </header>
       <div className="mt-2 min-h-[60px] text-sm leading-relaxed text-text-main">

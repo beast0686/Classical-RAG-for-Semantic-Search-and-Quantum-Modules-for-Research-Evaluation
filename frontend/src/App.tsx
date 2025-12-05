@@ -32,7 +32,7 @@ const AppShell: React.FC = () => {
       <Header />
       <main
         ref={containerRef}
-        className="mx-auto max-w-6xl px-4 pb-8 pt-4 lg:px-6 lg:pt-6 space-y-6"
+        className="pb-8 pt-4 lg:pt-6 space-y-6"
       >
         <Routes>
           <Route path="/" element={<HomePage />} />

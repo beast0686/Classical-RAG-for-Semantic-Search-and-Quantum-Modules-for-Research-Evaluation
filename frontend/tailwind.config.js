@@ -24,7 +24,7 @@ export default {
         '2xl': '1.5rem',
       },
       fontFamily: {
-        sans: ['system-ui', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'ui-sans-serif', 'sans-serif'],
       },
     },
   },
