@@ -7,6 +7,7 @@ and multi-LLM comparison with human feedback collection.
 
 # Core framework imports
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, Any, List
 import uvicorn
@@ -429,6 +430,22 @@ app = FastAPI(
     title="RAG Knowledge Graph API",
     version="1.0.0",
     description="Advanced RAG system with MongoDB vector search and Neo4j knowledge graph extraction"
+)
+
+# CORS configuration to allow frontend (Vite dev server) to call this API
+allowed_origins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @asynccontextmanager
@@ -1009,7 +1026,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
-        port=5001,
+        port=8000,
         reload=True,
         log_level="info"
     )
