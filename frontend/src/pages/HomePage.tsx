@@ -115,9 +115,6 @@ const HomePage: React.FC = () => {
           <header className="flex-shrink-0 flex items-center justify-between gap-2">
             <div>
               <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Retrieved Documents</h2>
-              <p className="mt-1 text-xs text-text-muted">
-                Top-k documents from MongoDB Atlas vector search, sorted by similarity.
-              </p>
             </div>
           </header>
           {hasDocs ? (
