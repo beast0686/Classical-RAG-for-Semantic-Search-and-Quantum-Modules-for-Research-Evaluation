@@ -69,9 +69,6 @@ const FeedbackForm: React.FC<Props> = ({ onSubmit, submitting }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <p className="text-xs text-text-muted">
-        Rate each answer on a 1–5 scale. These ratings will be stored alongside automated metrics for analysis.
-      </p>
       <div className="grid gap-3 sm:grid-cols-3">
         {MODELS.map((model) => (
           <div key={model.model_type} className="rounded-2xl bg-slate-50/90 p-3 text-xs">

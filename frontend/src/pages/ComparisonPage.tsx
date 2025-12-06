@@ -103,9 +103,6 @@ const ComparisonPage: React.FC = () => {
                 <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                   Rate Answers
                 </h2>
-                <p className="mt-1 text-xs text-text-muted">
-                  Feedback is stored per-session and per-model for research evaluation.
-                </p>
               </div>
               <Button
                 type="button"
