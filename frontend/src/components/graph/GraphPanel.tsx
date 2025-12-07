@@ -26,6 +26,88 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const simulationRef = useRef<d3.Simulation<D3Node, D3Link> | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  // Export function to convert SVG to high-quality PNG
+  const exportGraphAsPNG = async () => {
+    if (!svgRef.current || nodes.length === 0) return;
+
+    setIsExporting(true);
+
+    try {
+      const svg = svgRef.current;
+      const svgData = new XMLSerializer().serializeToString(svg);
+
+      // Get current dimensions
+      const svgRect = svg.getBoundingClientRect();
+      const width = svgRect.width;
+      const height = svgRect.height;
+
+      // Create a high-resolution canvas (2x for better quality)
+      const scaleFactor = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = width * scaleFactor;
+      canvas.height = height * scaleFactor;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Could not get canvas context');
+
+      // Scale context for high resolution
+      ctx.scale(scaleFactor, scaleFactor);
+
+      // Create SVG blob with embedded styles
+      const svgBlob = new Blob([`
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+          <style>
+            .nodes text { font-family: 'Inter', system-ui, sans-serif; }
+            .link-labels text { font-family: 'Inter', system-ui, sans-serif; }
+          </style>
+          ${svgData.replace('<svg', '<g').replace('</svg>', '</g>')}
+        </svg>
+      `], { type: 'image/svg+xml' });
+
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+
+      await new Promise((resolve, reject) => {
+        img.onload = () => {
+          // Fill white background
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+
+          // Draw the SVG
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert to PNG and download
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const downloadUrl = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = downloadUrl;
+              link.download = `knowledge-graph-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(downloadUrl);
+              resolve(true);
+            } else {
+              reject(new Error('Failed to create blob'));
+            }
+          }, 'image/png', 0.95);
+        };
+
+        img.onerror = reject;
+        img.src = url;
+      });
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to export graph:', error);
+      alert('Failed to export graph. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   useEffect(() => {
     if (!svgRef.current || !containerRef.current || nodes.length === 0) {
@@ -412,7 +494,6 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
         {/* Legend */}
         {nodes.length > 0 && (
           <div className="flex flex-col gap-1">
-            {/*<div className="text-xs font-medium text-slate-600 mb-1">Legend</div>*/}
             <div className="flex flex-wrap gap-2">
               {uniqueNodeTypes.map((nodeType) => (
                 <div key={nodeType} className="flex items-center gap-1">
@@ -434,7 +515,31 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
             <p className="text-xs text-text-muted">No graph data available. Run a query to see the knowledge graph.</p>
           </div>
         ) : (
-          <svg ref={svgRef} className="w-full h-full block" style={{ touchAction: 'none' }} />
+          <>
+            <svg ref={svgRef} className="w-full h-full block" style={{ touchAction: 'none' }} />
+
+            {/* Floating Export Button - Bottom Right */}
+            <button
+              onClick={exportGraphAsPNG}
+              disabled={isExporting}
+              className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full bg-gradient-to-r from-bright-indigo to-primary px-4 py-2 text-xs font-medium text-white shadow-colorful transition-all hover:from-primary hover:to-bright-indigo hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+              title="Export graph as PNG image"
+            >
+              {isExporting ? (
+                <>
+                  <span className="inline-flex h-3 w-3 animate-spin rounded-full border border-white/40 border-t-white" />
+                  <span>Exporting...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Export PNG</span>
+                </>
+              )}
+            </button>
+          </>
         )}
       </div>
     </section>
