@@ -45,7 +45,7 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
                 </td>
                 <td className="px-3 py-2 font-mono text-sm text-center border-l border-slate-200">
                   <span className={`rounded-full px-2 py-0.5 text-white text-sm shadow-sm ${
-                    row.key === 'plain_llm' 
+                    row.key === 'plain_llm'
                       ? 'bg-gradient-to-r from-bright-blue to-primary'
                       : row.key === 'mongodb_rag'
                       ? 'bg-gradient-to-r from-bright-green to-secondary'
@@ -56,7 +56,7 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
                 </td>
                 <td className="px-3 py-2 font-mono text-sm text-center border-l border-slate-200">
                   <span className={`rounded-full px-2 py-0.5 text-white text-sm shadow-sm ${
-                    row.key === 'plain_llm' 
+                    row.key === 'plain_llm'
                       ? 'bg-gradient-to-r from-primary to-bright-indigo'
                       : row.key === 'mongodb_rag'
                       ? 'bg-gradient-to-r from-secondary to-bright-green'

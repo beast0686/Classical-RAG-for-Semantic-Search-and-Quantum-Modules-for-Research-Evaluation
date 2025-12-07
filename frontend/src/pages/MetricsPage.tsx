@@ -38,27 +38,31 @@ const MetricsPage: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-5">
-      <section className="flex items-center justify-between gap-3">
+    <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-6">
+      <section className="flex items-center justify-between gap-3 p-4 rounded-2xl border border-bright-blue/30 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10 shadow-colorful">
         <div>
-          <h2 className="text-base font-semibold text-text-main">Metrics & feedback</h2>
-          <p className="text-xs text-text-muted">
-            Inspect historical human ratings and automated metrics across sessions.
-          </p>
+          <h2 className="text-base font-semibold bg-gradient-to-r from-bright-blue to-primary bg-clip-text text-transparent">Metrics & Feedback</h2>
         </div>
-        <Button type="button" variant="secondary" onClick={handleExport} disabled={!data?.metrics?.length}>
+        <Button
+          type="button"
+          onClick={handleExport}
+          disabled={!data?.metrics?.length}
+          className="whitespace-nowrap"
+        >
           Export JSON
         </Button>
       </section>
 
-      <section className="glass-card flex flex-col gap-3 rounded-2xl border border-slate-100 bg-card/80 p-4 shadow-soft">
-        <div className="flex flex-wrap items-end gap-3 text-xs">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Model</p>
+      <section className="glass-card flex flex-col gap-4 rounded-2xl border border-bright-purple/30 bg-gradient-to-br from-bright-purple/5 to-bright-purple/10 p-5 shadow-colorful">
+        <div className="flex flex-wrap items-end gap-4 text-xs">
+          <div className="p-3 rounded-lg border border-bright-blue/20 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] bg-gradient-to-r from-bright-blue to-primary bg-clip-text text-transparent mb-2">Model Filter</p>
             <select
               value={modelFilter}
               onChange={(e) => setModelFilter(e.target.value)}
-              className="mt-1 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-text-main"
+              className="rounded-full border border-bright-blue/30 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10
+                   px-3 py-2 text-xs text-text-main shadow-colorful outline-none transition-all
+                   focus:border-bright-blue focus:ring-2 focus:ring-bright-blue/20"
             >
               <option value="all">All models</option>
               <option value="plain_llm">Plain LLM</option>
@@ -66,37 +70,67 @@ const MetricsPage: React.FC = () => {
               <option value="neo4j_kg_rag">Neo4j KG RAG</option>
             </select>
           </div>
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Min rating</p>
-            <input
-              type="number"
-              min={0}
-              max={5}
-              step={0.5}
-              value={minRating}
-              onChange={(e) => setMinRating(Number(e.target.value) || 0)}
-              className="mt-1 w-20 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-text-main"
-            />
+
+          <div className="p-3 rounded-lg border border-bright-orange/20 bg-gradient-to-br from-bright-orange/5 to-bright-pink/10">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] bg-gradient-to-r from-bright-orange to-bright-pink bg-clip-text text-transparent mb-4">Minimum Rating</p>
+            <div className="flex items-center gap-1">
+                {[0, 1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    className={
+                      star === 0
+                        ? `px-2 py-1 text-xs rounded-full ${
+                            minRating === 0
+                              ? 'bg-yellow-400 text-white shadow-sm'   // All selected → yellow highlight
+                              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                          }`
+                        : star <= minRating
+                        ? 'text-yellow-400 hover:text-yellow-500'
+                        : 'text-gray-300 hover:text-gray-400'
+                    }
+                    onClick={() => setMinRating(star)}
+                    title={star === 0 ? 'No minimum rating' : `${star} star minimum`}
+                  >
+                    {star === 0 ? 'All' : '★'}
+                  </button>
+                ))}
+              <span className="ml-2 text-xs text-text-muted">
+                {minRating === 0 ? 'No filter' : `${minRating}+ stars`}
+              </span>
+            </div>
           </div>
+
           {data && (
-            <p className="ml-auto text-[11px] text-text-muted">
-              Showing {filtered.length} of {data.total_entries} entries
-            </p>
+            <div className="ml-auto p-2 rounded-full bg-gradient-to-r from-bright-green to-secondary text-white shadow-sm">
+              <p className="text-xs font-medium px-2">
+                {filtered.length} of {data.total_entries} entries
+              </p>
+            </div>
           )}
         </div>
 
-        {isLoading && <LoadingSpinner label="Loading metrics…" />}
-        {error && <ErrorState message={error.message} />}
+        {isLoading && (
+          <div className="p-4 rounded-2xl border border-bright-indigo/30 bg-gradient-to-br from-bright-indigo/5 to-bright-indigo/10">
+            <LoadingSpinner label="Loading metrics…" />
+          </div>
+        )}
+
+        {error && (
+          <div className="p-4 rounded-2xl border border-error/30 bg-gradient-to-br from-error/5 to-error/10">
+            <ErrorState message={error.message} />
+          </div>
+        )}
 
         {!isLoading && !error && (
-          <div className="max-h-[420px] overflow-auto rounded-2xl border border-slate-100">
-            <table className="min-w-full border-collapse text-left text-xs">
-              <thead className="bg-slate-100/80 text-[11px] uppercase tracking-[0.18em] text-slate-500">
+          <div className="max-h-[420px] overflow-auto rounded-2xl border border-medium-gray/40 bg-gradient-to-br from-white to-light-gray shadow-colorful">
+            <table className="min-w-full border-collapse text-left text-sm">
+              <thead className="border-b border-medium-gray/30">
                 <tr>
-                  <th className="px-3 py-2 font-semibold">Session</th>
-                  <th className="px-3 py-2 font-semibold">Model</th>
-                  <th className="px-3 py-2 font-semibold">Human ratings (avg)</th>
-                  <th className="px-3 py-2 font-semibold">Automated metrics</th>
+                  <th className="px-4 py-3 font-semibold bg-gradient-to-r from-bright-purple to-accent bg-clip-text text-transparent uppercase tracking-[0.18em] text-xs">Session ID</th>
+                  <th className="px-4 py-3 font-semibold bg-gradient-to-r from-bright-blue to-primary bg-clip-text text-transparent uppercase tracking-[0.18em] text-xs">Model Type</th>
+                  <th className="px-4 py-3 font-semibold bg-gradient-to-r from-bright-orange to-bright-pink bg-clip-text text-transparent uppercase tracking-[0.18em] text-xs">Human Ratings</th>
+                  <th className="px-4 py-3 font-semibold bg-gradient-to-r from-bright-green to-secondary bg-clip-text text-transparent uppercase tracking-[0.18em] text-xs">Automated Metrics</th>
                 </tr>
               </thead>
               <tbody>
@@ -110,26 +144,69 @@ const MetricsPage: React.FC = () => {
                       avgHuman = (vals.reduce((acc, v) => acc + v, 0) / vals.length).toFixed(2);
                     }
                   }
-                  const autoSummary = automated
-                    ? Object.entries(automated)
-                        .map(([name, v]) => `${name}: BLEU ${v.bleu.toFixed(2)}, ROUGE-L ${v.rouge_l.toFixed(2)}`)
-                        .join(' · ')
-                    : '—';
+                  // Get metrics for the specific model type only
+                  const modelMetrics = automated?.[entry.model_type];
+
+                  // Model-specific row coloring
+                  const rowColorClass = entry.model_type === 'plain_llm'
+                    ? 'bg-gradient-to-r from-bright-blue/5 to-bright-blue/10 border-bright-blue/20'
+                    : entry.model_type === 'mongodb_rag'
+                    ? 'bg-gradient-to-r from-bright-green/5 to-bright-green/10 border-bright-green/20'
+                    : 'bg-gradient-to-r from-bright-purple/5 to-bright-purple/10 border-bright-purple/20';
+
                   return (
-                    <tr key={entry.session_id + entry.model_type} className="border-t border-slate-100">
-                      <td className="px-3 py-2 font-mono text-[11px]">
-                        {entry.session_id.slice(0, 8)}…
+                    <tr key={entry.session_id + entry.model_type} className={`border-t ${rowColorClass} text-sm`}>
+                      <td className="px-4 py-3">
+                        <span className="rounded-full bg-gradient-to-r from-medium-gray to-slate-400 px-2 py-1 text-xs font-mono text-white shadow-sm">
+                          {entry.session_id.slice(0, 8)}…
+                        </span>
                       </td>
-                      <td className="px-3 py-2">{entry.model_type}</td>
-                      <td className="px-3 py-2">{avgHuman}</td>
-                      <td className="px-3 py-2 text-[11px] text-text-muted">{autoSummary}</td>
+                      <td className="px-4 py-3">
+                        <span className={`font-semibold ${
+                          entry.model_type === 'plain_llm'
+                            ? 'bg-gradient-to-r from-bright-blue to-primary bg-clip-text text-transparent'
+                            : entry.model_type === 'mongodb_rag'
+                            ? 'bg-gradient-to-r from-bright-green to-secondary bg-clip-text text-transparent'
+                            : 'bg-gradient-to-r from-bright-purple to-accent bg-clip-text text-transparent'
+                        }`}>
+                          {entry.model_type === 'plain_llm' ? 'Plain LLM'
+                           : entry.model_type === 'mongodb_rag' ? 'MongoDB RAG'
+                           : 'Neo4j KG RAG'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        {avgHuman !== '—' ? (
+                          <span className="rounded-full bg-gradient-to-r from-bright-orange to-bright-pink px-2 py-1 text-xs font-mono text-white shadow-sm">
+                            {avgHuman}/5
+                          </span>
+                        ) : (
+                          <span className="text-text-muted">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        {modelMetrics ? (
+                          <div className="flex gap-2">
+                            <span className="rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-2 py-1 text-xs font-mono text-white shadow-sm">
+                              BLEU {modelMetrics.bleu.toFixed(4)}
+                            </span>
+                            <span className="rounded-full bg-gradient-to-r from-red-500 to-red-600 px-2 py-1 text-xs font-mono text-white shadow-sm">
+                              ROUGE-L {modelMetrics.rouge_l.toFixed(4)}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-text-muted text-xs">—</span>
+                        )}
+                      </td>
                     </tr>
                   );
                 })}
                 {!filtered.length && (
                   <tr>
-                    <td className="px-3 py-4 text-center text-xs text-text-muted" colSpan={4}>
-                      No metrics match the current filters.
+                    <td className="px-4 py-6 text-center text-sm text-text-muted bg-gradient-to-r from-light-gray/50 to-white/50" colSpan={4}>
+                      <div className="flex flex-col items-center gap-2">
+                        <span className="text-2xl">📊</span>
+                        <span>No metrics match the current filters.</span>
+                      </div>
                     </td>
                   </tr>
                 )}
