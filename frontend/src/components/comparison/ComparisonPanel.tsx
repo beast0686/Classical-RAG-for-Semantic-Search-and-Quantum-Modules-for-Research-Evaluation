@@ -30,9 +30,9 @@ const ComparisonPanel: React.FC<Props> = ({ data }) => {
     <section className="glass-card rounded-2xl border border-slate-100 bg-card/80 p-4 shadow-soft">
       <header className="mb-3 flex items-center justify-between gap-2">
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Model Comparison
-          </h2>
+          {/*<h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">*/}
+          {/*  Model Comparison*/}
+          {/*</h2>*/}
         </div>
       </header>
 

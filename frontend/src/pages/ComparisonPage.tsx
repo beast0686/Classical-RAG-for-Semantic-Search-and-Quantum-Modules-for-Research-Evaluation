@@ -49,13 +49,11 @@ const ComparisonPage: React.FC = () => {
 
   return (
       <div className="flex flex-col min-h-screen w-full gap-5 px-12 py-6 bg-background">
-      <section className="flex items-center justify-between gap-3">
+      <section className="flex items-center justify-between gap-3 p-4 rounded-2xl border border-bright-blue/30 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10 shadow-colorful">
         <div>
-          <h2 className="text-base font-semibold text-text-main">Model comparison</h2>
+          <h2 className="text-base font-semibold bg-gradient-to-r from-bright-blue to-primary bg-clip-text text-transparent">Model Comparison</h2>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-xs text-text-muted">
-          </div>
           <Button
             type="button"
             onClick={handleRunComparison}
@@ -63,7 +61,7 @@ const ComparisonPage: React.FC = () => {
             loading={isPending}
             className="whitespace-nowrap"
           >
-            Generate comparison
+            Generate Comparison
           </Button>
         </div>
       </section>
@@ -88,7 +86,7 @@ const ComparisonPage: React.FC = () => {
               variant="primary"
               onClick={() => setFeedbackOpen(true)}
               disabled={feedbackSubmitted}
-              className="bg-gradient-to-r from-bright-orange to-bright-pink hover:from-bright-pink hover:to-bright-orange"
+              className="bg-gradient-to-r from-bright-orange to-bright-red hover:from-bright-pink hover:to-bright-orange"
             >
               {feedbackSubmitted ? 'Thank you for your feedback' : 'Rate Answers'}
             </Button>
