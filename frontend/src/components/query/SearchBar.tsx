@@ -27,7 +27,7 @@ const SearchBar: React.FC<Props> = ({ initialQuery = '', onSubmit, loading }) =>
       <div className="flex-1">
         <Input
           label="Query"
-          placeholder="Ask about your corpus, e.g. “How does the RAG pipeline construct the knowledge graph?”"
+          placeholder="Enter your search query..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
