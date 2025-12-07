@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { ComparisonResponse } from '../../api/comparison';
 import Button from '../common/Button';
 import ReactMarkdown from 'react-markdown';
@@ -45,16 +44,34 @@ const ComparisonPanel: React.FC<Props> = ({ data }) => {
           return (
             <div
               key={row.key}
-              className="flex flex-col rounded-2xl border border-slate-100 bg-slate-50/80 p-3 text-sm h-[340px]"
+              className={`flex flex-col rounded-2xl border p-3 text-sm h-[340px] ${
+                row.key === 'plain_llm' 
+                  ? 'border-bright-blue/30 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10' 
+                  : row.key === 'mongodb_rag'
+                  ? 'border-bright-green/30 bg-gradient-to-br from-bright-green/5 to-bright-green/10'
+                  : 'border-bright-purple/30 bg-gradient-to-br from-bright-purple/5 to-bright-purple/10'
+              }`}
             >
               <div className="mb-2 flex items-center justify-between gap-2">
                 <div>
                   <p className="text-xs font-semibold text-text-main">{labelMap[row.key]}</p>
-                  <div className="mt-1 flex gap-1 text-[11px] text-text-muted">
-                    <span className="rounded-full bg-white px-2 py-0.5 font-mono">
+                  <div className="mt-1 flex gap-1 text-xs text-text-muted">
+                    <span className={`rounded-full px-2 py-0.5 font-mono text-white ${
+                      row.key === 'plain_llm' 
+                        ? 'bg-gradient-to-r from-bright-blue to-primary' 
+                        : row.key === 'mongodb_rag'
+                        ? 'bg-gradient-to-r from-bright-green to-secondary'
+                        : 'bg-gradient-to-r from-bright-purple to-accent'
+                    }`}>
                       BLEU {metric?.bleu.toFixed(4) ?? '—'}
                     </span>
-                    <span className="rounded-full bg-white px-2 py-0.5 font-mono">
+                    <span className={`rounded-full px-2 py-0.5 font-mono text-white ${
+                      row.key === 'plain_llm' 
+                        ? 'bg-gradient-to-r from-primary to-bright-indigo' 
+                        : row.key === 'mongodb_rag'
+                        ? 'bg-gradient-to-r from-secondary to-bright-green'
+                        : 'bg-gradient-to-r from-accent to-bright-pink'
+                    }`}>
                       ROUGE-L {metric?.rouge_l.toFixed(4) ?? '—'}
                     </span>
                   </div>
@@ -62,7 +79,7 @@ const ComparisonPanel: React.FC<Props> = ({ data }) => {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="px-2 py-1 text-[11px]"
+                  className="px-2 py-1 text-xs"
                   onClick={() => handleCopy(answer)}
                   disabled={!answer}
                 >

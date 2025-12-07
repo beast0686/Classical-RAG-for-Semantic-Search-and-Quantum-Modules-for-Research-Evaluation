@@ -5,17 +5,18 @@ const DatabaseStats: React.FC = () => {
 
   if (error) {
     return (
-      <div className="hidden text-xs text-text-muted sm:block flex-shrink-0">
-        <span className="font-medium text-red-500">DB Error</span>
+      <div className="hidden sm:block flex-shrink-0">
+        <span className="rounded-full bg-gradient-to-r from-error to-red-600 px-3 py-1 text-xs font-medium text-white shadow-colorful">
+          DB Error
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="hidden text-xs text-text-muted sm:block flex-shrink-0">
-      <span className="font-medium text-slate-500">Total Documents</span>{' '}
-      <span className="rounded-full bg-slate-100 px-2 py-0.5 font-mono text-[11px] text-slate-700">
-        {isLoading ? '...' : data?.total_documents?.toLocaleString() ?? '0'}
+    <div className="hidden sm:block flex-shrink-0">
+      <span className="rounded-full bg-gradient-to-r from-bright-green to-secondary px-3 py-1 text-xs font-medium text-white shadow-colorful">
+        Documents: {isLoading ? '...' : data?.total_documents?.toLocaleString() ?? '0'}
       </span>
     </div>
   );

@@ -12,9 +12,9 @@ const baseClasses =
   'inline-flex items-center justify-center rounded-full text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-primary text-white hover:bg-primary-hover shadow-soft',
-  secondary: 'bg-secondary/10 text-secondary hover:bg-secondary/20',
-  ghost: 'bg-transparent text-text-muted hover:bg-slate-100',
+  primary: 'bg-gradient-to-r from-primary to-bright-blue text-white hover:from-primary-hover hover:to-primary shadow-colorful hover:shadow-bright transform hover:scale-[1.02] active:scale-[0.98]',
+  secondary: 'bg-gradient-to-r from-secondary/20 to-bright-green/20 text-secondary hover:from-secondary/30 hover:to-bright-green/30 border border-secondary/30',
+  ghost: 'bg-transparent text-text-muted hover:bg-light-gray hover:text-text-main',
 };
 
 const Button: React.FC<ButtonProps> = ({ variant = 'primary', loading, children, className = '', ...rest }) => {

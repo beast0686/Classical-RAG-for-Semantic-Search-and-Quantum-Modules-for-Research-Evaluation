@@ -54,7 +54,7 @@ const ComparisonPage: React.FC = () => {
           <h2 className="text-base font-semibold text-text-main">Model comparison</h2>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-[11px] text-text-muted">
+          <div className="text-xs text-text-muted">
           </div>
           <Button
             type="button"
@@ -85,29 +85,30 @@ const ComparisonPage: React.FC = () => {
           <div className="mt-4 flex items-center justify-center gap-3">
             <Button
               type="button"
-              variant="secondary"
+              variant="primary"
               onClick={() => setFeedbackOpen(true)}
               disabled={feedbackSubmitted}
+              className="bg-gradient-to-r from-bright-orange to-bright-pink hover:from-bright-pink hover:to-bright-orange"
             >
-              {feedbackSubmitted ? 'Thank you for your feedback' : 'Rate answers'}
+              {feedbackSubmitted ? 'Thank you for your feedback' : 'Rate Answers'}
             </Button>
           </div>
         </>
       )}
 
       {feedbackOpen && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay">
-          <div className="glass-card w-full max-w-3xl rounded-2xl border border-slate-100 bg-card p-5 shadow-soft">
-            <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm">
+          <div className="glass-card w-full max-w-4xl rounded-2xl border border-bright-orange/30 bg-gradient-to-br from-bright-orange/5 to-bright-pink/10 p-6 shadow-bright animate-in fade-in-0 zoom-in-95 duration-200">
+            <div className="mb-4 flex items-center justify-between gap-2 p-3 rounded-2xl border border-bright-orange/20 bg-gradient-to-r from-bright-orange/10 to-bright-pink/10">
               <div>
-                <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.18em] bg-gradient-to-r from-bright-orange to-bright-pink bg-clip-text text-transparent">
                   Rate Answers
                 </h2>
               </div>
               <Button
                 type="button"
                 variant="ghost"
-                className="px-2 py-1 text-[11px]"
+                className="px-2 py-1 text-xs"
                 onClick={() => setFeedbackOpen(false)}
               >
                 Close

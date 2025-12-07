@@ -22,7 +22,7 @@ const SearchBar: React.FC<Props> = ({ initialQuery = '', onSubmit, loading }) =>
   return (
     <form
       onSubmit={handleSubmit}
-      className="glass-card flex flex-col gap-3 rounded-2xl border border-slate-100 bg-card/80 px-4 py-4 shadow-soft sm:flex-row sm:items-center sm:gap-4"
+      className="glass-card flex flex-col gap-3 rounded-2xl border border-medium-gray/60 bg-gradient-to-br from-card/90 to-light-gray/80 px-4 py-4 shadow-colorful sm:flex-row sm:items-center sm:gap-4"
     >
       <div className="flex-1">
         <Input

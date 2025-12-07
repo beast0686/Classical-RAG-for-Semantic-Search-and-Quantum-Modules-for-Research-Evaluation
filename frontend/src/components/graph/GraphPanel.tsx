@@ -72,16 +72,17 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
       })
       .filter((l): l is D3Link => l !== null && l !== undefined);
 
-    // Color scale for node groups
+    // Color scale for node groups - bright colorful palette
     const groupColors: Record<string, string> = {
-      Document: '#7C3AED', // accent purple
-      Person: '#2563EB', // primary blue
-      Organization: '#0EA5A4', // secondary teal
-      Technology: '#16A34A', // success green
-      Inferred: '#6B7280', // muted gray
+      Document: '#A855F7', // bright purple
+      Person: '#3B82F6', // bright blue
+      Organization: '#10B981', // bright green
+      Technology: '#FB923C', // bright orange
+      Inferred: '#EC4899', // bright pink
+      Center: '#06B6D4', // bright cyan
     };
 
-    const getNodeColor = (group: string) => groupColors[group] || '#CBD5F5';
+    const getNodeColor = (group: string) => groupColors[group] || '#6366F1';
 
     // Create force simulation with wide spread layout
     const simulation = d3
@@ -145,7 +146,7 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
       .data(d3Links.filter((d) => d.relation))
       .enter()
       .append('text')
-      .attr('font-size', '9px')
+      .attr('font-size', '10px')
       .attr('fill', '#6B7280')
       .text((d) => d.relation || '')
       .style('pointer-events', 'none')
@@ -259,7 +260,7 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
       .style('background', 'rgba(15, 23, 42, 0.95)')
       .style('color', '#FFFFFF')
       .style('border-radius', '6px')
-      .style('font-size', '11px')
+      .style('font-size', '10px')
       .style('pointer-events', 'none')
       .style('opacity', 0)
       .style('z-index', 1000);
@@ -388,14 +389,14 @@ const GraphPanel: React.FC<Props> = ({ nodes, edges, onSelectDocument }) => {
     };
   }, [nodes, edges, onSelectDocument]);
 
-  // Node type colors for legend
+  // Node type colors for legend - bright colorful palette
   const nodeTypeColors = {
-    Document: '#7C3AED',
-    Person: '#2563EB',
-    Organization: '#0EA5A4',
-    Technology: '#16A34A',
-    Inferred: '#6B7280',
-    Center: '#CBD5F5'
+    Document: '#A855F7', // bright purple
+    Person: '#3B82F6', // bright blue
+    Organization: '#10B981', // bright green
+    Technology: '#FB923C', // bright orange
+    Inferred: '#EC4899', // bright pink
+    Center: '#06B6D4' // bright cyan
   };
 
   // Get unique node types from current nodes for legend

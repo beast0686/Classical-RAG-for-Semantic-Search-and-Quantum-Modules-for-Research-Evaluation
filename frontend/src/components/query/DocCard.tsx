@@ -10,11 +10,11 @@ const DocCard: React.FC<Props> = ({ doc, onClick }) => {
     <button
       type="button"
       onClick={onClick}
-      className="glass-card flex h-full flex-col rounded-2xl border border-slate-100 bg-card/80 p-4 text-left shadow-soft transition-transform hover:-translate-y-0.5 hover:shadow-lg"
+      className="glass-card flex h-full flex-col rounded-2xl border border-bright-blue/30 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10 p-4 text-left shadow-colorful transition-all hover:-translate-y-1 hover:shadow-bright hover:scale-[1.02]"
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <h3 className="line-clamp-1 text-sm font-semibold text-text-main">{doc.title || '[No title]'}</h3>
-        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-mono text-slate-600">
+        <span className="rounded-full bg-gradient-to-r from-bright-blue to-primary px-2 py-0.5 text-xs font-mono text-white shadow-sm">
           {Number(doc.score).toFixed(4)}
         </span>
       </div>
@@ -25,10 +25,18 @@ const DocCard: React.FC<Props> = ({ doc, onClick }) => {
             .split(',')
             .map((k) => k.trim())
             .filter(Boolean)
-            .map((kw) => (
+            .map((kw, index) => (
               <span
                 key={kw}
-                className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600"
+                className={`rounded-full px-2 py-0.5 text-xs text-white shadow-sm ${
+                  index % 4 === 0 
+                    ? 'bg-gradient-to-r from-bright-blue to-primary'
+                    : index % 4 === 1
+                    ? 'bg-gradient-to-r from-bright-green to-secondary'
+                    : index % 4 === 2
+                    ? 'bg-gradient-to-r from-bright-purple to-accent'
+                    : 'bg-gradient-to-r from-bright-orange to-bright-pink'
+                }`}
               >
                 {kw}
               </span>

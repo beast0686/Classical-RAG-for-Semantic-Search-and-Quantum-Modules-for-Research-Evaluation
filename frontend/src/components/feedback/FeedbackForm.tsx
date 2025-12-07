@@ -1,4 +1,5 @@
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import type { ModelType, FeedbackRatings } from '../../api/feedback';
 import Button from '../common/Button';
 
@@ -18,15 +19,16 @@ type Props = {
   submitting?: boolean;
 };
 
-const SLIDERS: (keyof FeedbackRatings)[] = ['accuracy', 'completeness', 'coherence', 'helpfulness'];
+const RATING_KEYS: (keyof FeedbackRatings)[] = ['accuracy', 'completeness', 'coherence', 'helpfulness'];
 
 const FeedbackForm: React.FC<Props> = ({ onSubmit, submitting }) => {
   const [values, setValues] = useState<Record<ModelType, FeedbackRatings>>({
-    plain_llm: { accuracy: 3, completeness: 3, coherence: 3, helpfulness: 3 },
-    mongodb_rag: { accuracy: 3, completeness: 3, coherence: 3, helpfulness: 3 },
-    neo4j_kg_rag: { accuracy: 3, completeness: 3, coherence: 3, helpfulness: 3 },
+    plain_llm: { accuracy: 0, completeness: 0, coherence: 0, helpfulness: 0 },
+    mongodb_rag: { accuracy: 0, completeness: 0, coherence: 0, helpfulness: 0 },
+    neo4j_kg_rag: { accuracy: 0, completeness: 0, coherence: 0, helpfulness: 0 },
   });
   const [error, setError] = useState<string | null>(null);
+  const [hoveredStar, setHoveredStar] = useState<{model: ModelType, key: keyof FeedbackRatings, star: number} | null>(null);
 
   const handleChange = (model: ModelType, key: keyof FeedbackRatings, val: number) => {
     setValues((prev) => ({
@@ -38,11 +40,34 @@ const FeedbackForm: React.FC<Props> = ({ onSubmit, submitting }) => {
     }));
   };
 
+  const StarRating = ({ model, ratingKey, value }: { model: ModelType, ratingKey: keyof FeedbackRatings, value: number }) => {
+    return (
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            className={`text-lg transition-colors ${
+              star <= (hoveredStar?.model === model && hoveredStar?.key === ratingKey ? hoveredStar.star : value)
+                ? 'text-yellow-400 hover:text-yellow-500'
+                : 'text-gray-300 hover:text-gray-400'
+            }`}
+            onClick={() => handleChange(model, ratingKey, star)}
+            onMouseEnter={() => setHoveredStar({model, key: ratingKey, star})}
+            onMouseLeave={() => setHoveredStar(null)}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Every slider is 1-5
+    // Every rating must be provided (1-5)
     for (const model of MODELS) {
       const v = values[model.model_type];
       if (!v) {
@@ -52,7 +77,11 @@ const FeedbackForm: React.FC<Props> = ({ onSubmit, submitting }) => {
       const keys: (keyof FeedbackRatings)[] = ['accuracy', 'completeness', 'coherence', 'helpfulness'];
       for (const key of keys) {
         const num = v[key];
-        if (!num || num < 1 || num > 5) {
+        if (num === 0) {
+          setError('Please provide ratings for all categories before submitting.');
+          return;
+        }
+        if (num < 1 || num > 5) {
           setError('Ratings must be between 1 and 5 for each model.');
           return;
         }
@@ -69,27 +98,51 @@ const FeedbackForm: React.FC<Props> = ({ onSubmit, submitting }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         {MODELS.map((model) => (
-          <div key={model.model_type} className="rounded-2xl bg-slate-50/90 p-3 text-xs">
-            <p className="mb-2 text-[11px] font-semibold tracking-[0.18em] text-slate-500">
-              {model.label.toUpperCase()}
-            </p>
-            <div className="space-y-2">
-              {SLIDERS.map((key) => (
-                <div key={key}>
-                  <div className="flex items-center justify-between text-[11px] text-text-muted">
-                    <span className="capitalize">{key}</span>
-                    <span className="font-mono">{values[model.model_type][key]}</span>
+          <div
+            key={model.model_type}
+            className={`rounded-2xl border p-4 text-sm shadow-colorful ${
+              model.model_type === 'plain_llm'
+                ? 'border-bright-blue/30 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10'
+                : model.model_type === 'mongodb_rag'
+                ? 'border-bright-green/30 bg-gradient-to-br from-bright-green/5 to-bright-green/10'
+                : 'border-bright-purple/30 bg-gradient-to-br from-bright-purple/5 to-bright-purple/10'
+            }`}
+          >
+            <div className="mb-3 p-2 rounded-lg border border-white/40 bg-white/50">
+              <p className={`text-sm font-semibold uppercase tracking-[0.18em] ${
+                model.model_type === 'plain_llm'
+                  ? 'bg-gradient-to-r from-bright-blue to-primary bg-clip-text text-transparent'
+                  : model.model_type === 'mongodb_rag'
+                  ? 'bg-gradient-to-r from-bright-green to-secondary bg-clip-text text-transparent'
+                  : 'bg-gradient-to-r from-bright-purple to-accent bg-clip-text text-transparent'
+              }`}>
+                {model.label}
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {RATING_KEYS.map((key) => (
+                <div key={key} className="p-2 rounded-lg bg-white/30">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-text-main capitalize">{key}</span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-mono shadow-sm ${
+                      values[model.model_type][key] === 0 
+                        ? 'bg-gradient-to-r from-gray-400 to-gray-500 text-white'
+                        : model.model_type === 'plain_llm'
+                        ? 'bg-gradient-to-r from-bright-blue to-primary text-white'
+                        : model.model_type === 'mongodb_rag'
+                        ? 'bg-gradient-to-r from-bright-green to-secondary text-white'
+                        : 'bg-gradient-to-r from-bright-purple to-accent text-white'
+                    }`}>
+                      {values[model.model_type][key] === 0 ? 'Not Rated' : `${values[model.model_type][key]}/5`}
+                    </span>
                   </div>
-                  <input
-                    type="range"
-                    min={1}
-                    max={5}
-                    step={1}
+                  <StarRating
+                    model={model.model_type}
+                    ratingKey={key}
                     value={values[model.model_type][key]}
-                    onChange={(e) => handleChange(model.model_type, key, Number(e.target.value))}
-                    className="w-full accent-primary"
                   />
                 </div>
               ))}
@@ -97,10 +150,20 @@ const FeedbackForm: React.FC<Props> = ({ onSubmit, submitting }) => {
           </div>
         ))}
       </div>
-      {error && <p className="text-xs text-error">{error}</p>}
-      <div className="flex justify-end">
-        <Button type="submit" loading={submitting}>
-          Submit feedback
+
+      {error && (
+        <div className="p-3 rounded-2xl border border-error/30 bg-gradient-to-br from-error/5 to-error/10">
+          <p className="text-sm text-error font-medium">{error}</p>
+        </div>
+      )}
+
+      <div className="flex justify-center pt-4">
+        <Button
+          type="submit"
+          loading={submitting}
+          className="bg-gradient-to-r from-bright-indigo to-primary hover:from-primary hover:to-bright-indigo px-6 py-2"
+        >
+          Submit Feedback
         </Button>
       </div>
     </form>

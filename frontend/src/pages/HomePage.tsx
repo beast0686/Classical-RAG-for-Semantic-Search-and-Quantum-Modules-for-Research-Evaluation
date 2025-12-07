@@ -90,35 +90,37 @@ const HomePage: React.FC = () => {
         {/* Fixed sections at top */}
         <div className="flex-shrink-0 space-y-6">
           <section className="space-y-3">
-            <div>
-              {/*<h2 className="text-base font-semibold text-text-main">Query your RAG pipeline</h2>*/}
-              {/*<p className="text-xs text-text-muted">*/}
-              {/*  Run semantic search, visualize the knowledge graph, and compare answers across models.*/}
-              {/*</p>*/}
+            <div className="p-4 rounded-2xl border border-bright-blue/30 bg-gradient-to-br from-bright-blue/5 to-bright-blue/10 shadow-colorful">
+                 <SearchBar onSubmit={handleSubmit} initialQuery={lastQuery} loading={isPending} />
             </div>
-            <SearchBar onSubmit={handleSubmit} initialQuery={lastQuery} loading={isPending} />
           </section>
 
           {isPending && !hasDocs && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 p-4 rounded-2xl border border-bright-indigo/30 bg-gradient-to-br from-bright-indigo/5 to-bright-indigo/10">
               <LoadingSpinner label="Embedding → retrieval → KG extraction → answer…" />
             </div>
           )}
 
-          {error && <ErrorState message={error.message} />}
+          {error && (
+            <div className="p-4 rounded-2xl border border-error/30 bg-gradient-to-br from-error/5 to-error/10">
+              <ErrorState message={error.message} />
+            </div>
+          )}
 
-          <AnswerPanel answer={lastAnswer} loading={isPending && !lastAnswer} />
+          <div className="p-4 rounded-2xl border border-bright-green/30 bg-gradient-to-br from-bright-green/5 to-bright-green/10 shadow-colorful">
+            <AnswerPanel answer={lastAnswer} loading={isPending && !lastAnswer} />
+          </div>
         </div>
 
         {/* Scrollable Retrieved Documents section */}
         <section className="flex-1 min-h-0 flex flex-col space-y-3">
-          <header className="flex-shrink-0 flex items-center justify-between gap-2">
+          <header className="flex-shrink-0 flex items-center justify-between gap-2 p-3 rounded-2xl border border-bright-purple/30 bg-gradient-to-br from-bright-purple/5 to-bright-purple/10">
             <div>
-              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Retrieved Documents</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.18em] bg-gradient-to-r from-bright-purple to-accent bg-clip-text text-transparent">Retrieved Documents</h2>
             </div>
           </header>
           {hasDocs ? (
-            <div className="overflow-y-auto flex-1 pr-2 custom-scrollbar">
+            <div className="overflow-y-auto flex-1 pr-2 custom-scrollbar p-4 rounded-2xl border border-bright-purple/30 bg-gradient-to-br from-bright-purple/5 to-bright-purple/10 shadow-colorful">
               <div className="grid gap-3 sm:grid-cols-1 lg:grid-cols-2">
                 {lastDocs.map((doc) => (
                   <DocCard key={doc.id} doc={doc} onClick={() => openDoc(doc)} />
@@ -126,7 +128,9 @@ const HomePage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <p className="text-xs text-text-muted">Documents will appear here after you run a query.</p>
+            <div className="p-4 rounded-2xl border border-bright-purple/30 bg-gradient-to-br from-bright-purple/5 to-bright-purple/10">
+              <p className="text-xs text-text-muted">Documents will appear here after you run a query.</p>
+            </div>
           )}
         </section>
       </div>
