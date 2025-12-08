@@ -204,7 +204,6 @@ const MetricsPage: React.FC = () => {
                   <tr>
                     <td className="px-4 py-6 text-center text-sm text-text-muted bg-gradient-to-r from-light-gray/50 to-white/50" colSpan={4}>
                       <div className="flex flex-col items-center gap-2">
-                        <span className="text-2xl">📊</span>
                         <span>No metrics match the current filters.</span>
                       </div>
                     </td>
