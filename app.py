@@ -613,16 +613,46 @@ async def query_endpoint(request: QueryRequest):
     print_status("Extracting knowledge graph", "PROCESSING")
     try:
         client = Together(api_key=os.getenv("TOGETHER_API_KEY"))
-        prompt = f"""Extract structured knowledge graph from documents. Output ONLY valid JSON.
-
-CRITICAL: source entity PERFORMS action on target entity.
-Example: "IBM developed Infoscope" → {{'source': 'IBM', 'relation': 'DEVELOPED', 'target': 'Infoscope'}}
-
-Entities format: {{"name": "entity", "type": "Person/Organization/Technology", "source_document_id": "doc_id"}}
-Max 15 entities, 20 relationships.
-
-Documents:
-{docs_text}"""
+        prompt = f"""
+        You are a powerful system that extracts a structured knowledge graph from a collection of documents.
+        Each document is tagged with a 'Document ID'.
+        
+        **CRITICAL RULE: The 'source' entity MUST be the entity that PERFORMS the action ('relation') on the 'target' entity. Do not invert the relationship.**
+        -   **Correct Example**: If the text is "IBM announced the development of Infoscope", the output MUST be:
+            `{{'source': 'IBM', 'relation': 'DEVELOPED', 'target': 'Infoscope'}}`
+        -   **Incorrect Example**: Do NOT output `{{'source': 'Infoscope', 'relation': 'DEVELOPED_BY', 'target': 'IBM'}}`. Always make the actor the source.
+        
+        Your task is to:
+        1. Extract a list of named entities. For EACH entity, you MUST specify the ID of the document it came from.
+        2. Extract a list of relationships between those entities.
+        3. Return a maximum of 15 entities and 20 relationships in total. Focus on the most relevant and interconnected entities across the documents.
+        4. Crucially, for every object in the "relationships" list, you MUST ensure that both the 'source' and 'target' entities are also defined in the "entities" list. Do not create relationships that refer to undefined entities.
+        Output ONLY a single, valid JSON object with two keys: "entities" and "relationships".
+    
+        The "entities" list must contain objects with THREE keys:
+        - "name": The name of the entity.
+        - "type": The entity type (e.g., "Person", "Organization", "Technology").
+        - "source_document_id": The ID of the document where this entity was found.
+    
+        Example output format:
+        {{
+          "entities": [
+            {{ "name": "Alan Turing", "type": "Person", "source_document_id": "668808b86e..." }},
+            {{ "name": "Enigma", "type": "Technology", "source_document_id": "668808b86e..." }},
+            {{ "name": "IBM", "type": "Organization", "source_document_id": "668808b73c..." }}
+          ],
+          "relationships": [
+            {{ "source": "Alan Turing", "relation": "cracked", "target": "Enigma" }}
+          ]
+        }}
+        Relationships part of the JSON must contain entities from what you have defined in the "entities" list.
+        Absolutely do not create relationships that refer to entities not defined in the "entities" list.
+        It is fine if you do not find the required number of relationships, but if you do, ensure they are valid.
+        Text to extract from:
+        \"\"\"
+        {docs_text}
+        \"\"\"
+        """
 
         response = client.chat.completions.create(
             model="Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
@@ -648,13 +678,18 @@ Documents:
             f"Title: {doc.get('title', '[No title]')}\nSummary: {doc.get('summary', '[No summary]')}"
             for doc in docs
         ])
-        answer_prompt = f"""Answer using only these documents. Be concise (max 150 words).
-
-Query: {user_query}
-Documents:
-{context_text}
-
-Answer:"""
+        answer_prompt = f""" You are a helpful assistant that answers user queries using the provided documents.
+        Be concise and accurate. If the documents do not provide enough information to fully answer the query,
+        you should clearly state what is known and mention that the current RAG system only contains 30,000 documents and cannot fully support your query.
+        Query: {user_query}
+        Documents:
+        {context_text}
+        Answer the query using the above documents. Your first 3-5 sentences should directly answer the query.
+        Then, provide a paragraph long summary cum explanation of the most relevant documents used to answer the query.
+        Do not exceed 150 words.
+        Refer to the number and ID's of documents used in your answer. Be clear about this and show it explicitly at the end of your answer as references.
+        Do not refer to the documents while providing the direct answer.
+        """
 
         client2 = OpenAI(api_key=os.getenv("BASETEN_API_KEY"), base_url="https://inference.baseten.co/v1")
         response = client2.chat.completions.create(
