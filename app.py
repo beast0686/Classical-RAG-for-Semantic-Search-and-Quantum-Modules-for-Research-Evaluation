@@ -566,7 +566,7 @@ async def query_endpoint(request: QueryRequest):
 
     # MongoDB vector search
     pipeline = [
-        {"$vectorSearch": {"index": "embeddings", "path": "embedding", "queryVector": query_vector,
+        {"$vectorSearch": {"index": "vector_index", "path": "embedding", "queryVector": query_vector,
                            "numCandidates": 100, "limit": k}},
         {"$project": {"_id": 1, "content": 1, "title": 1, "summary": 1, "keywords": 1, "url": 1,
                       "score": {"$meta": "vectorSearchScore"}}}
