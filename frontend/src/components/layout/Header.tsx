@@ -14,11 +14,11 @@ const Header: React.FC = () => {
           {/* Logo and Branding */}
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent text-white shadow-colorful overflow-hidden">
-                <img
-                  src="/neural.png"
-                  alt="Logo"
-                  className="h-8 object-contain"
-                />
+              <img
+                src="/neural.png"
+                alt="Logo"
+                className="h-8 object-contain"
+              />
             </div>
             <div>
               <h1 className="text-sm font-semibold tracking-tight text-text-main sm:text-base">
@@ -33,6 +33,7 @@ const Header: React.FC = () => {
               ['/', 'Query'],
               ['/comparison', 'Comparison'],
               ['/metrics', 'Metrics'],
+              ['/quantum-research', 'Quantum Research'],
               ['/settings', 'Settings'],
             ].map(([to, label]) => {
               const isActive = location.pathname === to;
@@ -40,11 +41,10 @@ const Header: React.FC = () => {
                 <Link
                   key={to}
                   to={to}
-                  className={`rounded-full px-3 py-1 transition-colors ${
-                    isActive
+                  className={`rounded-full px-3 py-1 transition-colors ${isActive
                       ? 'bg-primary text-white shadow-soft'
                       : 'text-text-muted hover:bg-slate-100 hover:text-text-main'
-                  }`}
+                    }`}
                 >
                   {label}
                 </Link>

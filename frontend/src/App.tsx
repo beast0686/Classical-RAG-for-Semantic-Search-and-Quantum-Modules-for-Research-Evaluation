@@ -6,6 +6,7 @@ import ComparisonPage from './pages/ComparisonPage';
 import MetricsPage from './pages/MetricsPage';
 import SettingsPage from './pages/SettingsPage';
 import Header from './components/layout/Header';
+import QuantumResearchPage from './pages/QuantumResearchPage';
 
 const AppShell: React.FC = () => {
   const location = useLocation();
@@ -38,6 +39,7 @@ const AppShell: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
           <Route path="/metrics" element={<MetricsPage />} />
+          <Route path="/quantum-research" element={<QuantumResearchPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
