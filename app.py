@@ -127,7 +127,7 @@ os.environ.pop("SSL_CERT_FILE", None)
 load_dotenv()
 
 # Define required environment variables for application functionality
-required_vars = ["MONGO_URI", "MONGO_DB", "MONGO_COLLECTION", "BASETEN_API_KEY",
+required_vars = ["MONGO_URI", "MONGO_DB", "MONGO_COLLECTION",
                 "NEO4J_URI", "NEO4J_USERNAME", "NEO4J_PASSWORD", "TOGETHER_API_KEY"]
 
 # Validate that all required environment variables are present
@@ -691,9 +691,9 @@ async def query_endpoint(request: QueryRequest):
         Do not refer to the documents while providing the direct answer.
         """
 
-        client2 = OpenAI(api_key=os.getenv("BASETEN_API_KEY"), base_url="https://inference.baseten.co/v1")
+        client2 = Together()
         response = client2.chat.completions.create(
-            model="moonshotai/Kimi-K2-Instruct-0905",
+            model="meta-llama/Llama-3.3-70B-Instruct-Turbo",
             messages=[{"role": "user", "content": answer_prompt}],
             max_tokens=1000,
         )
@@ -810,9 +810,9 @@ async def query_endpoint(request: QueryRequest):
     # Generate Plain LLM answer for metrics comparison
     plain_llm_answer = "[Plain LLM not computed]"
     try:
-        client_plain = OpenAI(api_key=os.getenv("BASETEN_API_KEY"), base_url="https://inference.baseten.co/v1")
+        client_plain = Together()
         plain_response = client_plain.chat.completions.create(
-            model="moonshotai/Kimi-K2-Instruct-0905",
+            model="meta-llama/Llama-3.3-70B-Instruct-Turbo",
             messages=[{"role": "user", "content": f"Answer: {user_query}"}],
             max_tokens=1000
         )
@@ -899,9 +899,9 @@ async def generate_comparison_endpoint(request: ComparisonRequest):
     if plain_llm_answer == "[No cached answer]":
         try:
             # Generate response using only the query without any context
-            client = OpenAI(api_key=os.getenv("BASETEN_API_KEY"), base_url="https://inference.baseten.co/v1")
+            client = Together()
             response = client.chat.completions.create(
-                model="moonshotai/Kimi-K2-Instruct-0905",
+                model="meta-llama/Llama-3.3-70B-Instruct-Turbo",
                 messages=[{"role": "user", "content": f"Answer: {user_query}"}],
                 max_tokens=1000
             )
@@ -930,9 +930,9 @@ async def generate_comparison_endpoint(request: ComparisonRequest):
 
             if kg_context:
                 # Generate answer using knowledge graph relationships as context
-                client = OpenAI(api_key=os.getenv("BASETEN_API_KEY"), base_url="https://inference.baseten.co/v1")
+                client = Together()
                 response = client.chat.completions.create(
-                    model="moonshotai/Kimi-K2-Instruct-0905",
+                    model="meta-llama/Llama-3.3-70B-Instruct-Turbo",
                     messages=[{"role": "user", "content": f"Answer using KG: {user_query}\n{kg_context}"}],
                     max_tokens=1000
                 )
