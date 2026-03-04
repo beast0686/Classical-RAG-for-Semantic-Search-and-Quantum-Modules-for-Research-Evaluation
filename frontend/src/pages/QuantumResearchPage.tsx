@@ -1,111 +1,111 @@
 import React, { useState, useEffect } from 'react';
 
-// --- Data Derived from Experiment Logs (PDF Source 1 & 2) ---
+// --- Experiment Logs ---
 const EXPERIMENT_DATA = [
     {
         id: "doc_1",
         text: "The dog chased the cat in the garden.",
         classical: "The dog was in the garden when it chased the cat.",
         quantum: "The cat was in the garden when it was chased.",
-        insight: "Classical parsing attaches 'in the garden' to the nearest noun (dog), missing the context."
+        insight: "Confirmed Silent Failure. The Classical Parser misinterpreted the context, forcing the LLM to weakly imply the cat's location. The Quantum Parser correctly identified the cat's location, allowing for a confident, factual answer."
     },
     {
         id: "doc_2",
         text: "We painted the wall with cracks.",
-        classical: "We used paint that had cracks in it.",
+        classical: "We used paint that had cracks in it to paint the wall.",
         quantum: "We painted a wall that already had cracks.",
-        insight: "The quantum classifier correctly associates 'cracks' as a property of the wall, not the paint."
+        insight: "A 'Garbage In, Garbage Out' error. The Classical Parser made a critical error, interpreting that the paint itself had cracks. The Quantum system correctly attributed the cracks to the wall."
     },
     {
         id: "doc_3",
         text: "The girl read the book on the shelf.",
-        classical: "The girl was sitting on the shelf reading.",
-        quantum: "The book was located on the shelf.",
-        insight: "Standard heuristics fail to distinguish semantic plausibility."
+        classical: "The girl was sitting on the shelf while reading the book.",
+        quantum: "The girl read the book that was located on the shelf.",
+        insight: "Viola Moment. The classical parser failed to distinguish semantic plausibility, placing the girl on the shelf. The quantum parser correctly identified the shelf as the book's location."
     },
     {
         id: "doc_4",
         text: "She called her friend from New York.",
-        classical: "She made the call while she was in New York.",
-        quantum: "She called a friend who lives in New York.",
-        insight: "Quantum entanglement captures the 'origin' relationship correctly."
+        classical: "She made a phone call from New York to her friend.",
+        quantum: "She called her friend who lives in New York.",
+        insight: "Origin Ambiguity. Classical heuristics assumed the subject was in New York. The Quantum Parser correctly identified 'from New York' as a modifier of the friend, significantly boosting answer relevance."
     },
     {
         id: "doc_5",
         text: "He wrote a letter to the editor in the newspaper.",
-        classical: "He was inside the newspaper office writing.",
-        quantum: "The letter was for the editor employed by the newspaper.",
-        insight: "Prepositional phrase attachment error resolved by QNLP."
+        classical: "He wrote a letter while he was inside the newspaper's office.",
+        quantum: "The letter was addressed to the editor who works at the newspaper.",
+        insight: "The classical parser created a flawed context that made the question unanswerable. The quantum parser provided the crucial missing link about the editor's employment."
     },
     {
         id: "doc_6",
         text: "The police questioned the witness in the car.",
-        classical: "The witness was in the car.",
-        quantum: "The police were in the car while questioning.",
-        insight: "Ambiguous location attachment resolved via quantum states."
+        classical: "The witness was in the car when being questioned.",
+        quantum: "The police were in the car while questioning the witness.",
+        insight: "Ambiguous location attachment. While classical parsing placed the witness in the car, the quantum parser attributed the location to the police conducting the questioning."
     },
     {
         id: "doc_7",
         text: "The musician played the guitar with a broken string.",
-        classical: "Used a broken string as a pick/tool.",
-        quantum: "The guitar itself had a broken string.",
-        insight: "Instrumental 'with' vs. Comitative 'with' disambiguation."
+        classical: "He used a broken string as a pick to play the guitar.",
+        quantum: "The guitar he was playing had a broken string.",
+        insight: "Instrumental vs. Comitative 'with'. The classical parser absurdly interpreted the broken string as a tool (a pick). The quantum parser correctly identified it as a property of the guitar."
     },
     {
         id: "doc_8",
         text: "The chef prepared the fish with herbs from the garden.",
-        classical: "The chef was in the garden preparing fish.",
-        quantum: "The herbs were sourced from the garden.",
-        insight: "Source vs. Location ambiguity."
+        classical: "The chef, while in the garden, prepared the fish using herbs.",
+        quantum: "The chef prepared the fish using herbs that were sourced from the garden.",
+        insight: "Source vs. Location. Classical parsing placed the chef physically in the garden. Quantum parsing correctly identified the garden as the source of the herbs."
     },
     {
         id: "doc_9",
         text: "The lawyer presented the evidence to the judge in the courtroom.",
-        classical: "The judge was in the courtroom.",
-        quantum: "The presentation happened in the courtroom.",
-        insight: "Event location attachment."
+        classical: "The judge was in the courtroom when the evidence was presented.",
+        quantum: "The evidence was physically located in the courtroom when presented.",
+        insight: "Event Scope. The quantum parser clarified the physical location of the evidence during the presentation event, whereas classical parsing focused on the judge's location."
     },
     {
         id: "doc_10",
         text: "The horse raced past the barn fell.",
-        classical: "The barn fell.",
-        quantum: "The horse fell (Garden Path Sentence).",
-        insight: "A classic Garden Path sentence where classical parsers crash on the main verb."
+        classical: "A horse raced past a barn, and then the barn fell.",
+        quantum: "The horse that was being raced past the barn, fell down.",
+        insight: "Garden Path Sentence. The classical parser crashed on the main verb, assuming the barn fell. The quantum parser successfully resolved the reduced relative clause, identifying that the horse fell."
     },
     {
         id: "doc_11",
         text: "The old man the boat.",
-        classical: "The old man is on the boat.",
-        quantum: "The elderly are staffing (manning) the boat.",
-        insight: "Noun/Verb ambiguity ('man' as a verb)."
+        classical: "The elderly man is on or owns the boat.",
+        quantum: "The elderly are responsible for staffing the boat.",
+        insight: "Part-of-Speech Ambiguity. The classical parser failed to recognize 'man' as a verb. The quantum parser correctly interpreted 'The old' as a collective noun and 'man' as the action of staffing."
     },
     {
         id: "doc_12",
         text: "The author wrote the book for the children with pictures.",
-        classical: "Children were holding pictures.",
-        quantum: "The book contained pictures.",
-        insight: "Modification attachment ambiguity."
+        classical: "The author wrote a book, which contained pictures, for the children.",
+        quantum: "The author wrote a book, which contained pictures, for the children.",
+        insight: "No Advantage Observed. In this specific adversarial run, both parsers resolved the ambiguity identically. This highlights that quantum advantage is targeted toward specific non-linear structural failures."
     },
     {
         id: "doc_13",
         text: "She gave the letter to her friend from the office.",
-        classical: "The letter was sent from the office.",
-        quantum: "The friend is from the office.",
-        insight: "Origin attachment ambiguity."
+        classical: "The letter she gave to her friend was originally sent from the office.",
+        quantum: "She gave the letter to her friend who works at the office.",
+        insight: "Origin Attachment. Classical parsing attached 'from the office' to the letter's origin. Quantum parsing correctly attached it to the friend's employment/location."
     },
     {
         id: "doc_14",
         text: "Flying planes can be dangerous.",
-        classical: "Planes in the air are dangerous.",
-        quantum: "The act of piloting planes is dangerous.",
-        insight: "Gerund vs. Adjective ambiguity."
+        classical: "Planes that are currently in the air can be dangerous.",
+        quantum: "The act of piloting planes can be a dangerous activity.",
+        insight: "Gerund Ambiguity. Classical parsing treated 'Flying' as an adjective describing the planes. Quantum parsing correctly identified it as the act (gerund) of piloting."
     },
     {
         id: "doc_15",
         text: "The man who whistles tunes pianos.",
-        classical: "The whistling man is adjusting tunes.",
-        quantum: "The man (who whistles) tunes pianos (job).",
-        insight: "Garden path structural ambiguity resolved."
+        classical: "The man who is whistling is also adjusting the musical tunes of pianos.",
+        quantum: "The man, whose hobby is whistling, has a job tuning pianos.",
+        insight: "Structural Parse Failure. Classical parsing misinterpreted 'tunes' as a noun. The quantum parser correctly identified 'tunes' as the main verb of the sentence."
     },
 ];
 
@@ -125,7 +125,7 @@ const QuantumResearchPage: React.FC = () => {
         const timer = setTimeout(() => {
             setIsProcessing(false);
             setShowResult(true);
-        }, 1800); // 1.8s animation duration
+        }, 1800);
         return () => clearTimeout(timer);
     }, [selectedId]);
 
@@ -283,7 +283,7 @@ const QuantumResearchPage: React.FC = () => {
                                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                                             <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
                                         </span>
-                                        Quantum-Enhanced
+                                        Quantum Pipeline
                                     </h3>
                                 </div>
 
@@ -309,15 +309,51 @@ const QuantumResearchPage: React.FC = () => {
                         {/* Insight Footer */}
                         <div className={`mt-8 overflow-hidden transition-all duration-700 ease-in-out relative z-10 ${isProcessing || !selectedScenario ? 'h-0 opacity-0' : 'h-auto opacity-100'}`}>
                             {selectedScenario && (
-                                <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-6 border border-primary/20 shadow-inner flex items-start gap-4 transform transition-transform hover:scale-[1.01] duration-300">
-                                    <div className="bg-white p-2.5 rounded-xl shadow-sm border border-primary/10 text-primary shrink-0 animate-bounce">
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                                <div className="bg-white rounded-3xl p-8 border border-medium-gray shadow-[0_8px_30px_rgb(0,0,0,0.06)] transform transition-transform duration-500">
+                                    <div className="flex items-center gap-4 mb-6">
+                                        <div className="bg-white p-2.5 rounded-xl shadow-sm border border-primary/10 text-primary shrink-0 animate-bounce">
+                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-text-main font-extrabold text-xl">Insight Analysis</h4>
+                                            {/* <p className="text-sm font-medium text-text-muted mt-1 uppercase tracking-wider">Breakdown of syntax resolution</p> */}
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h4 className="text-accent font-bold uppercase tracking-wide text-xs mb-1">Structural Insight</h4>
-                                        <p className="text-[15px] text-text-main font-medium leading-relaxed">
-                                            {selectedScenario.insight}
-                                        </p>
+
+                                    <div className="bg-blue-50/40 rounded-2xl p-6 shadow-inner flex flex-col gap-4">
+                                        {selectedScenario.insight.split('. ').map((sentence, idx, arr) => {
+                                            const isLast = idx === arr.length - 1;
+                                            const text = sentence + (isLast ? '' : '.');
+
+                                            // Simple regex heuristic to try and highlight Classical/Quantum keywords for better readability
+                                            if (text.toLowerCase().includes('classical') || text.toLowerCase().includes('heuristic')) {
+                                                return (
+                                                    <div key={idx} className="bg-blue-50 border border-blue-100 p-5 rounded-xl flex flex-col">
+                                                        <span className="text-error font-extrabold mb-3 text-[14px] uppercase tracking-wider flex items-center gap-2">
+                                                            <span className="bg-error/10 px-3 py-1 rounded-md">Classical Failure</span>
+                                                        </span>
+                                                        <span className="text-slate-700 font-medium text-[16px] leading-[1.6]">{text}</span>
+                                                    </div>
+                                                );
+                                            } else if (text.toLowerCase().includes('quantum') || text.toLowerCase().includes('qnlp') || text.toLowerCase().includes('vqc') || text.toLowerCase().includes('entanglement')) {
+                                                return (
+                                                    <div key={idx} className="bg-blue-50 border border-blue-100 p-5 rounded-xl flex flex-col">
+                                                        <span className="text-accent font-extrabold mb-3 text-[14px] uppercase tracking-wider flex items-center gap-2">
+                                                            <span className="bg-accent/10 px-3 py-1 rounded-md">Quantum Success</span>
+                                                        </span>
+                                                        <span className="text-slate-900 font-semibold text-[16px] leading-[1.6]">{text}</span>
+                                                    </div>
+                                                );
+                                            }
+
+                                            // Fallback for regular sentences
+                                            // return (
+                                            //     <div key={idx} className="mb-2">
+                                            //         <span className="block text-primary font-bold mb-1 text-[12px] uppercase tracking-wider">Message</span>
+                                            //         <span className="block text-slate-800 font-bold text-[17px]">{text}</span>
+                                            //     </div>
+                                            // );
+                                        })}
                                     </div>
                                 </div>
                             )}
