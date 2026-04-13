@@ -2,27 +2,27 @@
 
 \section{Background}
 
-Large Language Models (LLMs) have significantly advanced the field of Natural Language Processing (NLP), demonstrating strong capabilities in tasks such as text generation, summarization, and question answering. However, these models rely on parametric knowledge acquired during training, which limits their ability to access updated information and often leads to issues such as hallucination and factual inconsistency.
+Large language models (LLMs) have made significant progress in the domain of natural language processing (NLP). LLMs have demonstrated exceptional competence in generating text, summarizing texts, and answering questions. However, LLMs are heavily dependent on parametric knowledge learned through training, thereby limiting their ability to retrieve relevant information and resulting in problems like hallucinations and lack of factual consistency.
 
-To address these limitations, Retrieval-Augmented Generation (RAG) has emerged as a hybrid paradigm that combines LLMs with external knowledge sources. In this approach, relevant documents are retrieved from a vector database and used as contextual input for the generation process. This integration improves factual grounding and enhances the reliability of generated responses.
+In order to address these challenges, the paradigm of retrieval augmented generation (RAG) has been proposed. The RAG model involves the combination of LLMs with external knowledge sources. In this approach, relevant documents are first retrieved using a vector database and then used as context for generation.
 
 \section{Problem Statement}
 
-Despite its advantages, the effectiveness of RAG systems is heavily dependent on the quality of the retrieval process. A critical limitation arises when the system encounters syntactically ambiguous queries. Traditional retrieval mechanisms primarily rely on keyword matching or vector similarity, which fail to capture deeper structural relationships within language. As a result, ambiguous queries often lead to incorrect document retrieval and misleading outputs.
+Even though RAGs possess various strengths, the efficacy of the model is significantly influenced by the accuracy of its retrieval mechanism. One of the primary shortcomings arises when the system processes syntactically ambiguous sentences. Traditional methods rely on keyword searching and vector similarity, which fail to account for deeper linguistic dependencies in the language. As a result, the retrieval process often returns incorrect documents, leading to misguiding output.
 
-This issue becomes more pronounced in cases involving prepositional phrase attachment, reduced relative clauses, and other complex grammatical constructs. Classical NLP models tend to exhibit local attachment bias, where decisions are made based on nearby tokens rather than the global sentence structure, leading to semantic misinterpretation.
+The issue becomes increasingly prominent in situations where there are instances of prepositional phrase attachment and reduced relative clauses. The classical approach to natural language processing suffers from a local attachment bias. This implies that decisions are made based on proximity rather than global sentence structures.
 
 \section{Motivation}
 
-The inability of classical RAG systems to resolve syntactic ambiguity highlights the need for more expressive computational frameworks. Quantum computing offers a promising direction due to its ability to represent and process information in high-dimensional Hilbert spaces. By leveraging principles such as superposition and entanglement, quantum systems can model complex dependencies that are difficult to capture using classical approaches.
+The incapacity of classical RAG models to disambiguate syntactic ambiguity highlights the need for more powerful computational models. Quantum computing appears to be an appealing choice due to its ability to describe and compute data within Hilbert space. Through concepts like superposition and entanglement, quantum-based algorithms can model intricate correlations that are difficult to handle using classical models.
 
-This research is motivated by the hypothesis that quantum-enhanced models can complement classical retrieval systems, particularly in scenarios involving non-linear linguistic structures. Rather than replacing existing systems, the goal is to design a hybrid architecture that utilizes the strengths of both paradigms.
+This research is guided by the premise that quantum models may enhance the performance of classical retrieval-based models, especially when dealing with non-linear structures in language. Instead of replacing conventional models, the aim is to develop a combination framework utilizing the best attributes of both worlds.
 
 \section{Proposed Approach}
 
-In this work, we propose the Quantum Retrieval-Augmented Generation (QRAG) framework, which integrates classical RAG pipelines with Quantum Natural Language Processing (QNLP) techniques. The system introduces an Ambiguity Controller that identifies structurally complex queries and dynamically routes them to a quantum processing pipeline.
+QRAG is introduced in this paper as the proposed Quantum RAG approach, which combines traditional RAG systems with Quantum Natural Language Processing (QNLP). The system includes the Ambiguity Controller, which checks for structurally complex questions and sends them to the quantum pipeline for processing.
 
-The quantum component employs Variational Quantum Circuits (VQC) to encode grammatical dependencies and perform syntactic disambiguation. In contrast, simpler queries are handled using efficient classical methods, ensuring minimal computational overhead. This selective routing mechanism enables the system to balance accuracy and efficiency.
+The quantum pipeline uses the Variational Quantum Circuit (VQC) for the encoding of grammatical dependencies as well as syntactic disambiguation. On the other hand, simpler questions will be processed using classical methods efficiently.
 
 \newpage
 
@@ -40,4 +40,4 @@ The key contributions of this work are as follows:
 
 \section{Organization of the Report}
 
-The remainder of this report is structured as follows. The subsequent chapters present the theoretical foundations of RAG and quantum computing, followed by the detailed methodology of the QRAG framework. Implementation and deployment details are then discussed, along with experimental evaluation and results. Finally, conclusions and future research directions are presented.
+This report will be divided as follows. The upcoming chapters will explain the theories behind RAG and quantum computing before describing the approach used by QRAG in detail. Implementation issues and a demonstration of the approach will follow, after which a discussion on how to move forward and conduct further research will conclude the report.

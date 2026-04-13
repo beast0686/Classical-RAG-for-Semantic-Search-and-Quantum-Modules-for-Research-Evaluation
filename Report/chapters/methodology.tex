@@ -1,12 +1,12 @@
 \chapter{Methodology}
 
-This chapter describes the detailed methodology adopted for the design and implementation of the Quantum Retrieval-Augmented Generation (QRAG) framework. The methodology focuses on integrating classical Retrieval-Augmented Generation (RAG) pipelines with Quantum Natural Language Processing (QNLP) techniques to address syntactic ambiguity in user queries. The system is designed as a hybrid architecture that selectively applies quantum processing for complex linguistic structures while maintaining efficiency for simpler queries.
+The purpose of this chapter is to outline the approach used for designing and implementing the QRAG framework. The research method is based on the combination of classical RAG pipelines with QNLP approaches to address the problem of syntactic ambiguity in user queries. The framework is designed as a hybrid system that uses quantum approaches only when necessary to process complex queries.
 
 \section{System Architecture Overview}
 
-The QRAG system follows a modular and decoupled architecture consisting of multiple layers, including query processing, ambiguity detection, hybrid execution, retrieval, and response generation. Each component operates independently while communicating through well-defined interfaces, ensuring scalability and maintainability.
+QRAG works with the help of a modular and decoupled system architecture consisting of different layers such as query processing, ambiguity detection, hybrid execution, retrieval, and response generation. All these work independently but have a defined interface for communicating with each other.
 
-The overall workflow begins with user input, followed by structural analysis of the query. Based on the detected complexity, the system routes the query to either a classical or quantum processing pipeline.
+The entire process flow starts from user interaction to structural analysis of the query and then depends on the complexity, leads the process either to traditional or quantum processing route.
 
 \section{Model Pipeline Steps}
 
@@ -57,12 +57,11 @@ The execution and visualization of these pipeline steps are illustrated in Figur
 
 \section{Data Preparation and Corpus Construction}
 
-The system utilizes a heterogeneous dataset comprising approximately 30,000 records stored in MongoDB. The dataset is preprocessed using normalization, tokenization, and embedding generation to enable efficient vector-based retrieval.
+The proposed system makes use of a diverse database containing roughly 130,000 entries stored in MongoDB. The preprocessing of this database takes place through normalization, tokenization, and embedding creation for vector-based searches.
 
 \section{Ambiguity Detection Strategy}
 
-A lightweight POS tagging mechanism is used to detect syntactic ambiguity. The system identifies patterns such as prepositional phrase attachment, reduced relative clauses, and coordination ambiguity. Queries matching these patterns are routed to the quantum pipeline.
-
+A light weight POS tagger is used to find syntactic ambiguity. The algorithm recognizes the pattern such as attachment of preposition, reduced relative clauses, and coordination ambiguity. Queries with patterns matching the above are passed to quantum processing.
 \section{Algorithm Comparison}
 
 A comparative analysis of classical and quantum approaches used in the system is presented in Table~\ref{tab:algorithm_comparison}. This comparison highlights the advantages of hybrid processing.
@@ -94,7 +93,7 @@ The classical pipeline handles low-complexity queries using dependency parsing a
 
 \section{Quantum Processing Pipeline}
 
-The quantum pipeline encodes queries into quantum states using rotation gates and models dependencies using entanglement (CZ gates). The circuit is executed on a quantum backend to determine the correct interpretation.
+Query encoding in the quantum pipeline uses rotation gates and dependency encoding uses entanglement realized using the CZ gate. The circuit is then run on a quantum backend to interpret which way to go.
 
 \section{Variational Quantum Circuit Design}
 
@@ -113,8 +112,6 @@ The structure of relationships between retrieved entities is illustrated in Figu
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.48\textwidth]{assets/cicn/graph.png}
-%    \hfill
-%    \includegraphics[width=0.48\textwidth]{assets/cicn/graph.png}
     \caption{Knowledge graph representations illustrating relationships between retrieved entities.}
     \label{fig:retrieval_graphs}
 \end{figure}

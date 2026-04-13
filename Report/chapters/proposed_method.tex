@@ -1,10 +1,10 @@
 \chapter{Proposed Method}
 
-This chapter presents the proposed methodology for the Quantum Retrieval-Augmented Generation (QRAG) framework. The system is designed as a hybrid architecture that combines classical retrieval mechanisms with quantum-enhanced syntactic disambiguation. The primary objective is to improve semantic understanding in queries that exhibit structural ambiguity while maintaining efficiency for standard queries.
+The following chapter presents the methodology that will be adopted in the Quantum Retrieval-Augmented Generation (QRAG). QRAG will adopt an architectural approach, whereby it will combine classical methods of retrieval with quantum-based methods of syntactic disambiguation. The primary aim of QRAG is to improve semantic understanding of structural ambiguous queries without compromising efficiency.
 
 \section{Overview of the QRAG Framework}
 
-The QRAG framework introduces a controlled hybrid pipeline where each query is dynamically routed based on its structural complexity. Instead of applying quantum computation universally, the system identifies ambiguity patterns and selectively activates the quantum processing layer only when necessary.
+The QRAG model suggests the development of a hybrid pipeline that is tightly regulated based on the complexity of each query. Instead of using quantum computing for all cases, the algorithm recognizes the patterns of ambiguity and uses quantum processing only when necessary.
 
 The workflow consists of three major stages:
 \begin{enumerate}
@@ -33,9 +33,9 @@ Additionally, the high-level process flow of ambiguity detection and routing is 
 
 \section{Ambiguity Detection Mechanism}
 
-The first stage of the system involves detecting syntactic ambiguity in the input query. A lightweight Part-of-Speech (POS) tagger is used to extract grammatical patterns from the query.
+The first stage of the process deals with detecting any syntactic ambiguities present in the query. To accomplish this, a simple POS tagging technique is used to analyze the syntax of the query.
 
-The ambiguity detection function is defined as:
+The function of ambiguity detection is as follows:
 
 \[
     \delta(q) =
@@ -62,13 +62,13 @@ Once ambiguity is detected, the query is routed to one of two processing pipelin
 
 \subsection{Classical Processing Pipeline}
 
-For low-complexity queries, the system utilizes a classical NLP pipeline. This includes dependency parsing, vector-based retrieval, and context construction for response generation. This pipeline ensures low latency and efficient processing for standard queries.
+In the case of simple queries, a classical natural language processing pipeline is used. It involves dependency parsing, vector-based retrieval, and contextual information creation for the process of answer formation. The design of such a pipeline is geared towards ensuring that simple queries will not take long to be processed.
 
 \subsection{Quantum Processing Pipeline}
 
-For queries identified as ambiguous, the system activates the quantum pipeline. In this stage, the query is transformed into a quantum representation using a Variational Quantum Classifier (VQC).
+In cases where the input queries are identified as ambiguous, the quantum pipeline is triggered. In this step, the query is translated to its quantum form through the Variational Quantum Classifier (VQC).
 
-Each token in the query is encoded into a qubit using rotation gates:
+The tokens that make up the input query are mapped to qubits using rotation gates:
 
 \[
     |\psi(x)\rangle = \bigotimes_{i=1}^{N} R_y(\phi(x_i)) |0\rangle_i
@@ -86,9 +86,9 @@ The final classification is obtained by measuring the expectation value of an ob
 
 \section{Contextual Realignment}
 
-After processing, the system selects the most appropriate interpretation of the query. This step ensures that the retrieved context aligns with the intended meaning of the query.
+The next step after processing is to determine the proper interpretation for the query. This will ensure that the information collected will be in line with the meaning of the query itself.
 
-The interpretation is defined as:
+The interpretation is known as:
 
 \[
     C_{interp} =
@@ -102,7 +102,7 @@ This refined interpretation is then used to reformulate the query before retriev
 
 \section{Integration with Retrieval-Augmented Generation}
 
-Once the query is disambiguated, it is passed to the retrieval module. Relevant documents are retrieved using semantic similarity from the vector database. The retrieved context is then provided to the generation module, ensuring improved factual accuracy and reduced hallucination.
+After the query disambiguation process, the retrieval stage takes place. Here, relevant documents are identified using semantic similarity from the vector database. The generated context is then fed into the generation model, thereby increasing the accuracy of the facts generated and reducing hallucinations.
 
 \section{Algorithmic Workflow}
 
@@ -139,4 +139,4 @@ The design of the QRAG framework is guided by the following principles:
 \end{itemize}
 
 \bigskip\noindent
-The proposed QRAG methodology introduces a hybrid approach that combines the strengths of classical and quantum computing. By incorporating ambiguity detection and selective quantum processing, the system effectively addresses the limitations of traditional RAG pipelines.
+The suggested QRAG model outlines a hybrid approach that takes into consideration the strengths of both classical and quantum computing technologies. In fact, the utilization of ambiguity detection and quantum computation has clearly helped overcome the shortcomings associated with traditional RAG frameworks.
