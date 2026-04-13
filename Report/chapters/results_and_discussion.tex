@@ -1,0 +1,197 @@
+\chapter{Results and Discussion}
+
+This chapter presents the experimental results and analysis of the proposed Quantum Retrieval-Augmented Generation (QRAG) framework. The objective is to evaluate the effectiveness of the hybrid quantum-classical approach in resolving syntactic ambiguity and improving system performance. :contentReference[oaicite:0]{index=0}
+
+\section{Experimental Setup}
+
+The evaluation was conducted using a curated Ambiguity Challenge Dataset consisting of 15 syntactically complex queries, including garden path sentences, prepositional phrase attachment, reduced relative clauses, and gerund ambiguity cases.
+
+The user interface used for executing queries and visualizing results is shown in Figure~\ref{fig:website_homepage}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/website/homepage.jpeg}
+    \caption{QRAG system interface for query execution and interaction.}
+    \label{fig:website_homepage}
+\end{figure}
+
+\section{Evaluation Metrics}
+
+The performance was evaluated using the following metrics:
+\begin{itemize}
+    \item Context Relevance (CR)
+    \item Answer Faithfulness (AF)
+    \item Answer Relevance (AR)
+\end{itemize}
+
+\section{Test Case Analysis}
+
+Representative test cases and their interpretation performance are summarized in Table~\ref{tab:test_cases}. The results highlight the improved accuracy of the quantum pipeline in resolving syntactic ambiguity.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Sample Test Cases and Interpretation Results}
+    \label{tab:test_cases}
+    \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|p{3cm}|}
+        \hline
+        \textbf{Query} & \textbf{Ambiguity Type} & \textbf{Classical Output} & \textbf{Quantum Output} \\
+        \hline
+        The old man the boat & Reduced Relative Clause & Incorrect & Correct \\
+        \hline
+        Flying planes can be dangerous & Gerund Ambiguity & Incorrect & Correct \\
+        \hline
+        Letter to the editor in the newspaper & PP Attachment & Incorrect & Correct \\
+        \hline
+        Simple factual query & None & Correct & Correct \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Performance Comparison}
+
+The comparative performance of classical and quantum pipelines is presented in Table~\ref{tab:performance_comparison}. The results demonstrate a significant improvement in handling ambiguous queries using the quantum-enhanced pipeline.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Performance Comparison between Classical and Quantum Pipelines}
+    \label{tab:performance_comparison}
+    \begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|}
+        \hline
+        \textbf{Metric} & \textbf{Classical Pipeline} & \textbf{Quantum Pipeline} \\
+        \hline
+        Context Relevance (CR) & Moderate & High \\
+        \hline
+        Answer Faithfulness (AF) & Moderate & High \\
+        \hline
+        Answer Relevance (AR) & High (sometimes misleading) & High (accurate) \\
+        \hline
+        Ambiguous Query Accuracy & Low & High \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Latency and Efficiency Analysis}
+
+The latency and efficiency comparison between classical and quantum pipelines is shown in Table~\ref{tab:latency}. While quantum processing introduces additional overhead, it significantly improves accuracy for complex queries.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Latency and Efficiency Comparison}
+    \label{tab:latency}
+    \begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|}
+        \hline
+        \textbf{Aspect} & \textbf{Classical Pipeline} & \textbf{Quantum Pipeline} \\
+        \hline
+        Processing Time & Low & High \\
+        \hline
+        Resource Usage & Low & High \\
+        \hline
+        Scalability & High & Limited \\
+        \hline
+        Best Use Case & Simple Queries & Complex Ambiguous Queries \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Aggregate Performance Analysis}
+
+Out of the 15 test queries:
+\begin{itemize}
+    \item 10 queries showed improvement using the quantum pipeline
+    \item 3 queries showed similar performance
+    \item 2 queries showed reduced performance due to quantum noise
+\end{itemize}
+
+These results confirm that quantum advantage is dependent on query complexity.
+
+\section{Impact of Retrieval Depth ($k$)}
+
+The effect of retrieval depth is demonstrated in Figures~\ref{fig:k19_results}--\ref{fig:k3_graph}. A higher value of $k$ improves contextual richness, while lower values lead to insufficient retrieval and degraded performance.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/website/What advancements relates to India _ 19/query results homepage.png}
+    \caption{Query results for $k=19$ showing rich contextual retrieval.}
+    \label{fig:k19_results}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{assets/website/What advancements relates to India _ 3/same query ran on k value 3 shows poor results.png}
+    \hfill
+    \includegraphics[width=0.48\textwidth]{assets/website/What advancements relates to India _ 3/k value 3 shows poor metrics.png}
+    \caption{Performance degradation observed with lower retrieval depth $k=3$.}
+    \label{fig:k3_results}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/website/What advancements relates to India _ 3/exported kg for k value 3.png}
+    \caption{Sparse knowledge graph generated for insufficient retrieval depth.}
+    \label{fig:k3_graph}
+\end{figure}
+
+\section{System Interface and Metrics Analysis}
+
+The system provides detailed evaluation and comparison dashboards, as illustrated in Figures~\ref{fig:comparison_dashboard}--\ref{fig:metrics_dashboard}. These interfaces allow users to analyze performance and provide feedback.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{assets/website/Comparision/comparision homepage.png}
+    \hfill
+    \includegraphics[width=0.48\textwidth]{assets/website/Comparision/generated comparison and table.png}
+    \caption{Comparison dashboard showing model outputs and tabular analysis.}
+    \label{fig:comparison_dashboard}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{assets/website/Metrics/metrics homepage.png}
+    \hfill
+    \includegraphics[width=0.48\textwidth]{assets/website/Metrics/metrics filter.png}
+    \caption{Metrics dashboard and filtering interface for performance tracking.}
+    \label{fig:metrics_dashboard}
+\end{figure}
+
+\section{Quantum Analysis and Experimental Evidence}
+
+The effectiveness of quantum processing is demonstrated in Figures~\ref{fig:quantum_analysis} and \ref{fig:quantum_advantage}. These figures highlight ambiguity resolution and the relationship between query complexity and quantum advantage.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth]{assets/website/Quantum Research/ambiguity resolution demo.png}
+    \hfill
+    \includegraphics[width=0.48\textwidth]{assets/website/Quantum Research/exprimental evidence screen with graphs.png}
+    \caption{Quantum ambiguity resolution and experimental evaluation results.}
+    \label{fig:quantum_analysis}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{assets/website/Quantum Research/complexity vs quantum advantage, conclusion.png}
+    \caption{Relationship between query complexity and quantum advantage.}
+    \label{fig:quantum_advantage}
+\end{figure}
+
+\section{Edge Case Analysis}
+
+In certain out-of-domain scenarios, baseline language models outperform retrieval-based approaches, as shown in Figure~\ref{fig:edge_case}. This highlights limitations of domain-constrained retrieval.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/website/Unrelated query yields better plainLLM answer/model comparison.png}
+    \caption{Comparison showing baseline LLM outperforming QRAG for unrelated queries.}
+    \label{fig:edge_case}
+\end{figure}
+
+\section{Discussion}
+
+The results demonstrate that:
+\begin{itemize}
+    \item Classical systems are efficient but limited in handling ambiguity
+    \item Quantum systems provide improved semantic understanding for complex queries
+    \item Hybrid architecture provides an optimal balance between performance and efficiency
+\end{itemize}
+
+\bigskip\noindent
+Overall, the QRAG framework successfully enhances semantic interpretation in ambiguous queries while maintaining efficiency for simpler cases. The results validate the effectiveness of integrating quantum processing into retrieval-augmented generation systems.

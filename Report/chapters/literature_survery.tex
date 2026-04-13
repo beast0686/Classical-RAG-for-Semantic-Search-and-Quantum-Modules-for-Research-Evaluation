@@ -1,0 +1,70 @@
+\chapter{Literature Survey}
+This chapter presents a comprehensive review of existing research in Retrieval-Augmented Generation (RAG), syntactic ambiguity in Natural Language Processing (NLP), and the application of quantum computing in language understanding. The objective is to analyze the limitations of current systems and establish the foundation for the proposed hybrid QRAG framework.
+
+\section{Retrieval-Augmented Generation}
+
+Retrieval-Augmented Generation (RAG) was introduced to overcome the limitations of parametric knowledge in Large Language Models (LLMs) by integrating them with external knowledge sources \cite{lewis2021rag}. This paradigm enhances factual accuracy by retrieving relevant documents and incorporating them into the generation process.
+
+However, the performance of RAG systems is highly dependent on the quality of retrieved context. Studies have shown that models struggle to effectively utilize long-context information, especially when dealing with complex queries \cite{liu2023lostmiddle}. Enhancements such as iterative calibration and concept-based retrieval have been proposed to improve retrieval alignment and contextual relevance \cite{sgic2025,concept2025rag}.
+
+\section{Syntactic Ambiguity in NLP}
+
+Syntactic ambiguity remains a major challenge in NLP, where multiple interpretations arise due to structural variations in sentences. Classical parsing techniques often rely on local heuristics, leading to incorrect interpretations.
+
+Research indicates that models exhibit local attachment bias, associating modifiers with nearby tokens instead of considering global structure \cite{trustworthy2025}. Additionally, modern LLMs demonstrate overconfidence in ambiguous scenarios, often producing incorrect yet fluent outputs \cite{racquet2025}. These limitations highlight the need for more expressive models capable of capturing structural dependencies.
+
+\section{Quantum Machine Learning}
+
+Quantum Machine Learning (QML) introduces a novel approach to handling complex data by leveraging high-dimensional Hilbert spaces. Quantum-enhanced feature representations allow for improved modeling of non-linear relationships \cite{havlicek2019quantum}.
+
+Variational Quantum Classifiers (VQC) provide a practical implementation of QML using parameterized quantum circuits, enabling learning in complex feature spaces \cite{schuld2020circuit,schuld2021encoding}. These models are particularly suitable for near-term quantum devices operating in the NISQ era.
+
+\section{Quantum Natural Language Processing}
+
+Quantum Natural Language Processing (QNLP) extends quantum principles to linguistic modeling by representing words as quantum states and grammar as quantum operations.
+
+The DisCoCat framework establishes a connection between grammatical structures and quantum circuits, enabling compositional representation of sentence meaning \cite{coeke2020qnlp}. Tools such as lambeq facilitate the transformation of classical parse trees into executable quantum circuits \cite{kartsaklis2021lambeq}. These approaches enable the modeling of non-local dependencies in language.
+
+\section{Hybrid Quantum-Classical Systems}
+
+Due to the limitations of current quantum hardware, hybrid quantum-classical systems have emerged as a practical solution. These systems leverage classical computation for efficiency while utilizing quantum models for complex tasks \cite{preskill2018nisq}.
+
+Research suggests that quantum advantage is task-dependent and becomes significant only for problems involving high complexity and non-linear relationships \cite{schuld2021encoding}. This observation motivates the need for selective integration of quantum components in NLP systems.
+
+\section{Comparative Analysis of Existing Works}
+
+To better understand the strengths and limitations of existing research, a comparative analysis of key studies is presented in Table~\ref{tab:literature_comparison}.
+
+\begin{table}[h]
+    \centering
+    \caption{Comparison of Existing Research Works}
+    \label{tab:literature_comparison}
+    \begin{tabular}{|p{3cm}|p{3cm}|p{4cm}|p{4cm}|}
+        \hline
+        \textbf{Work} & \textbf{Domain} & \textbf{Key Contribution} & \textbf{Limitation} \\
+        \hline
+        Lewis et al. (2021) \cite{lewis2021rag} & RAG & Introduced retrieval-augmented generation for improving factual accuracy & Fails in handling syntactic ambiguity \\
+        \hline
+        Liu et al. (2023) \cite{liu2023lostmiddle} & RAG & Identified long-context utilization issues in LLMs & Poor handling of complex contextual dependencies \\
+        \hline
+        Havlíček et al. (2019) \cite{havlicek2019quantum} & QML & Proposed quantum-enhanced feature spaces for classification & Requires specialized quantum hardware \\
+        \hline
+        Schuld et al. (2020) \cite{schuld2020circuit} & QML & Introduced circuit-based quantum classifiers & Limited scalability on NISQ devices \\
+        \hline
+        Coecke et al. (2020) \cite{coeke2020qnlp} & QNLP & Developed DisCoCat framework for quantum linguistic modeling & High implementation complexity \\
+        \hline
+        Kartsaklis et al. (2021) \cite{kartsaklis2021lambeq} & QNLP & Provided toolkit for mapping NLP to quantum circuits & Limited real-world deployment \\
+        \hline
+        Preskill (2018) \cite{preskill2018nisq} & Quantum Computing & Defined NISQ-era limitations and hybrid approaches & Noise and hardware constraints persist \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Research Gap}
+
+The literature highlights a clear gap in current approaches. While RAG systems improve factual grounding, they do not effectively address syntactic ambiguity. On the other hand, quantum approaches offer enhanced representational capabilities but lack integration into practical NLP systems.
+
+This gap motivates the development of a hybrid framework that selectively applies quantum processing for complex linguistic tasks while maintaining the efficiency of classical systems.
+
+\bigskip\noindent
+The reviewed literature demonstrates that classical and quantum approaches have complementary strengths. Classical RAG systems are efficient but limited in handling structural ambiguity, whereas quantum models provide expressive power but face hardware constraints. The proposed QRAG framework builds upon these insights by integrating both paradigms into a unified architecture, enabling improved semantic understanding and more reliable retrieval-augmented generation.

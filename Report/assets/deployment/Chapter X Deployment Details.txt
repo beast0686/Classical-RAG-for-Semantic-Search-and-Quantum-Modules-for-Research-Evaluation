@@ -1,0 +1,47 @@
+Chapter X: Deployment Details
+X.1 Deployment Architecture Overview
+The deployment of the RAG Knowledge Graph system utilizes a decoupled, cloud-native architecture hosted primarily on Microsoft Azure. The infrastructure is divided into four distinct layers: a static frontend client, a RESTful API backend, a cloud-hosted vector database, and a self-managed graph database. This separation of concerns ensures scalability, simplifies CI/CD pipelines, and allows for independent resource scaling based on computational demands.
+
+[Insert Screenshot: Resources page showing all Azure components together]
+
+X.2 Frontend Deployment (ragqrag)
+The client-side application is built using React, Vite, and TypeScript, optimized for fast delivery and client-side routing.
+
+Hosting Environment: Azure App Service running a Node.js 24 LTS runtime.
+
+Build Process: The application utilizes Azure's Oryx build engine. During deployment, the strict TypeScript compiler (tsc -b) executes alongside Vite's production build step to generate optimized static assets.
+
+Static File Serving: Because Vite outputs raw static files (HTML/JS/CSS) into a dist directory rather than an active Node server, the deployment utilizes pm2 as a production-grade process manager. The Azure startup command is explicitly configured to serve these static files while redirecting all client-side routing back to the index.html file to support Single Page Application (SPA) navigation:
+pm2 serve /home/site/wwwroot/dist --no-daemon --spa
+
+Domain & SSL: The frontend is bound to a custom domain (ragqrag.tech) secured via Azure Managed Certificates.
+
+[Insert Screenshot: .tech domain dashboard / Frontend Overview Page]
+
+X.3 Backend API Deployment (ragqrag-backend)
+The core reasoning engine and API surface are built with FastAPI and Python 3.11. Deploying a heavy Machine Learning and Quantum-augmented workload required specific optimizations to accommodate cloud container limits.
+
+Hosting Environment: Azure App Service (Linux Container). The system is designed to run efficiently on the Basic (B1) tier, utilizing dynamic scaling up to Premium V3 (P1v3) during peak presentation or heavy inference workloads.
+
+Server Configuration: The application is served using Gunicorn acting as a process manager for Uvicorn asynchronous workers. To prevent Out-Of-Memory (OOM) crashes during the initialization of heavy scientific libraries (such as Qiskit and PyTorch), the server is constrained to a single, stable worker process:
+gunicorn --bind=0.0.0.0:8000 --timeout 600 -w 1 -k uvicorn.workers.UvicornWorker app:app
+
+Container Lifecycle Optimization: Azure Linux containers enforce a strict 230-second health-probe timeout during boot. To ensure successful deployment, the application architecture implements Lazy Loading for its SentenceTransformer models (all-MiniLM-L6-v2). Rather than downloading and loading the 22MB PyTorch model into memory synchronously at startup, the model is deferred and loaded asynchronously upon the first API request. Furthermore, the maximum container boot limit was extended to 1800 seconds via the WEBSITES_CONTAINER_START_TIME_LIMIT environment variable.
+
+Security & CORS: To facilitate secure cross-origin requests from the React frontend, Azure's default CORS interceptors were disabled in favor of FastAPI's native CORSMiddleware. The origins are strictly whitelisted to the production domain (https://ragqrag.tech and https://www.ragqrag.tech), preventing preflight request failures.
+
+[Insert Screenshot: Overview page of ragqrag-backend]
+
+X.4 Database Infrastructure
+The system relies on a dual-database architecture to support both semantic vector search and structured knowledge graph traversal.
+
+Vector Database (MongoDB Atlas): The document corpus and generated embeddings are hosted on MongoDB Atlas. Connection strings are injected via Azure Environment Variables, with strict 5-second connection timeouts implemented to prevent synchronous blocking during server boot.
+
+Knowledge Graph (Neo4j): The extracted entities and relationships are stored in a self-managed Neo4j instance hosted on an Azure Virtual Machine (Standard_D2s_v3).
+
+X.5 Cost Optimization & Resource Hibernation Strategy
+Given the computational weight of the application, a hibernation strategy was implemented to minimize cloud expenditures between active usage periods.
+
+The Neo4j Virtual Machine is kept in a Stopped (Deallocated) state to halt CPU/RAM billing, incurring only minimal storage costs for the OS disk.
+
+The App Service Plans are dynamically scaled down to the Basic (B1) tier during idle weeks and scaled up to Premium (P1v3) for live demonstrations, ensuring high performance exactly when needed without continuous premium billing.

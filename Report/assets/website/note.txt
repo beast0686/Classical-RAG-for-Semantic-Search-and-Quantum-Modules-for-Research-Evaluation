@@ -1,0 +1,12 @@
+For first query and explanation in the results section start with the
+What advancements relates to India _ 19 folder
+
+Then compare that with the results obtained in What advancements relates to India _ 3 folder proving that higher k value means better output
+
+Then show the Comparison, Metrics and Quantum Research folder screenshots
+
+Then for Mobile View results, show the Mobile View - india and AI query folder screenshots
+
+Edge case - Unrelated query to be shown after that which is there in the Unrelated query folder
+
+Post which you can show the 3 other query results with different query values and conclude

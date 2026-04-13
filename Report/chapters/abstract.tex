@@ -1,0 +1,11 @@
+\chapter*{Abstract}
+Retrieval augmented generation, or RAG, helps large language models by pulling in outside knowledge, but it runs into issues with tricky sentence structures in complicated questions. That often means the retrieval part gets it wrong, and then the generation follows suit. This project tries to fix that with something called QRAG, which mixes classical methods and quantum stuff for natural language processing.
+
+\bigskip\noindent
+The idea is to use a variational quantum classifier to handle those ambiguous queries better. It encodes the sentences into quantum circuits, I think, so it can pick up on dependencies that regular vector stuff misses, like non linear connections in language. Then there's this ambiguity controller that decides whether to send the query through the classical path or the quantum one, depending on how messy it is. That way, simple inputs don't waste time on heavy quantum processing.
+
+\bigskip\noindent
+In experiments, it showed better results for sorting out those syntactic problems. On tough datasets, accuracy went up by as much as 46 percent. It seems like there's a point where quantum really kicks in for complex tasks, kind of a threshold, and below that classical is fine. Some people might argue if quantum is worth it overall, but the numbers back it up here.
+
+\bigskip\noindent
+The whole setup builds a hybrid system that's scalable, where the two approaches work together. It makes RAG more reliable, especially for getting the meaning right in semantic ways. Not everything is perfect yet, this part feels a bit underdeveloped.

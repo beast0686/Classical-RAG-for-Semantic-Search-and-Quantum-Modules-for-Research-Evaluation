@@ -1,0 +1,142 @@
+\chapter{Proposed Method}
+
+This chapter presents the proposed methodology for the Quantum Retrieval-Augmented Generation (QRAG) framework. The system is designed as a hybrid architecture that combines classical retrieval mechanisms with quantum-enhanced syntactic disambiguation. The primary objective is to improve semantic understanding in queries that exhibit structural ambiguity while maintaining efficiency for standard queries.
+
+\section{Overview of the QRAG Framework}
+
+The QRAG framework introduces a controlled hybrid pipeline where each query is dynamically routed based on its structural complexity. Instead of applying quantum computation universally, the system identifies ambiguity patterns and selectively activates the quantum processing layer only when necessary.
+
+The workflow consists of three major stages:
+\begin{enumerate}
+    \item Ambiguity Detection
+    \item Hybrid Processing (Classical or Quantum)
+    \item Contextual Realignment and Generation
+\end{enumerate}
+
+The overall architecture of the proposed system is illustrated in Figure~\ref{fig:vertical_crag}, which depicts the integration of classical and quantum pipelines within a unified framework.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{assets/bnmit/Vertical CRAG Pipeline.png}
+    \caption{Vertical CRAG Pipeline diagram illustrating the hybrid processing flow.}
+    \label{fig:vertical_crag}
+\end{figure}
+
+Additionally, the high-level process flow of ambiguity detection and routing is shown in Figure~\ref{fig:journal_flowchart}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{assets/Journal/flowchart.png}
+    \caption{Overall process flowchart of ambiguity detection and routing pipeline.}
+    \label{fig:journal_flowchart}
+\end{figure}
+
+\section{Ambiguity Detection Mechanism}
+
+The first stage of the system involves detecting syntactic ambiguity in the input query. A lightweight Part-of-Speech (POS) tagger is used to extract grammatical patterns from the query.
+
+The ambiguity detection function is defined as:
+
+\[
+    \delta(q) =
+    \begin{cases}
+        1, & \text{if } q \text{ contains ambiguity signatures} \\
+        0, & \text{otherwise}
+    \end{cases}
+\]
+
+where $\delta(q)$ determines whether the query should be processed using the quantum pipeline or the classical pipeline.
+
+The system identifies ambiguity using predefined signature patterns such as:
+\begin{itemize}
+    \item Prepositional Phrase Attachment
+    \item Reduced Relative Clauses
+    \item Coordination Ambiguity
+\end{itemize}
+
+These patterns represent structural configurations where classical parsers are prone to failure.
+
+\section{Hybrid Processing Architecture}
+
+Once ambiguity is detected, the query is routed to one of two processing pipelines.
+
+\subsection{Classical Processing Pipeline}
+
+For low-complexity queries, the system utilizes a classical NLP pipeline. This includes dependency parsing, vector-based retrieval, and context construction for response generation. This pipeline ensures low latency and efficient processing for standard queries.
+
+\subsection{Quantum Processing Pipeline}
+
+For queries identified as ambiguous, the system activates the quantum pipeline. In this stage, the query is transformed into a quantum representation using a Variational Quantum Classifier (VQC).
+
+Each token in the query is encoded into a qubit using rotation gates:
+
+\[
+    |\psi(x)\rangle = \bigotimes_{i=1}^{N} R_y(\phi(x_i)) |0\rangle_i
+\]
+
+Grammatical dependencies between tokens are modeled using Controlled-Z (CZ) entangling gates, enabling the system to capture non-local relationships between words.
+
+The variational quantum circuit is defined as:
+
+\[
+    U(\theta) = \prod_{l=1}^{L} \left(U_{ent}^{(l)} \cdot U_{rot}^{(l)}(\theta_l)\right)
+\]
+
+The final classification is obtained by measuring the expectation value of an observable, which determines the correct syntactic interpretation.
+
+\section{Contextual Realignment}
+
+After processing, the system selects the most appropriate interpretation of the query. This step ensures that the retrieved context aligns with the intended meaning of the query.
+
+The interpretation is defined as:
+
+\[
+    C_{interp} =
+    \begin{cases}
+        S_1, & \text{if } \hat{y} = 1 \\
+        S_0, & \text{otherwise}
+    \end{cases}
+\]
+
+This refined interpretation is then used to reformulate the query before retrieval and generation.
+
+\section{Integration with Retrieval-Augmented Generation}
+
+Once the query is disambiguated, it is passed to the retrieval module. Relevant documents are retrieved using semantic similarity from the vector database. The retrieved context is then provided to the generation module, ensuring improved factual accuracy and reduced hallucination.
+
+\section{Algorithmic Workflow}
+
+The detailed workflow of the proposed method is illustrated in Figure~\ref{fig:cicn_flowchart}. The figure shows the complete sequence from query input to response generation.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{assets/cicn/flowchart.png}
+    \caption{Detailed algorithmic workflow of the QRAG framework.}
+    \label{fig:cicn_flowchart}
+\end{figure}
+
+The algorithm can be summarized as follows:
+
+\begin{enumerate}
+    \item Accept user query $Q$
+    \item Perform preprocessing and POS tagging
+    \item Detect syntactic ambiguity
+    \item Route query to classical or quantum pipeline
+    \item Perform contextual realignment
+    \item Retrieve relevant documents
+    \item Generate final response using LLM
+\end{enumerate}
+
+\section{Design Considerations}
+
+The design of the QRAG framework is guided by the following principles:
+
+\begin{itemize}
+    \item \textbf{Efficiency:} Classical processing is used wherever possible to minimize computational overhead.
+    \item \textbf{Selective Quantum Usage:} Quantum computation is applied only to complex queries.
+    \item \textbf{Modularity:} Independent components improve scalability and maintainability.
+    \item \textbf{Extensibility:} The system allows integration of advanced quantum models.
+\end{itemize}
+
+\bigskip\noindent
+The proposed QRAG methodology introduces a hybrid approach that combines the strengths of classical and quantum computing. By incorporating ambiguity detection and selective quantum processing, the system effectively addresses the limitations of traditional RAG pipelines.
