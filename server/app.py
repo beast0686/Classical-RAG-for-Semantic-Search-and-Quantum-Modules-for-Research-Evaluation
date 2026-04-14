@@ -439,11 +439,16 @@ app = FastAPI(
 )
 
 # CORS configuration to allow frontend (Vite dev server) to call this API
+# Added support for FRONTEND_URL environment variable for Azure deployment
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 allowed_origins = [
+    frontend_url,
     "http://localhost:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
+    # Add your explicit Azure frontend domains here if needed:
+    # "https://my-react-app.azurewebsites.net"
 ]
 
 app.add_middleware(
@@ -1092,10 +1097,14 @@ if __name__ == "__main__":
     print_status("Starting FastAPI server", "SUCCESS")
     console.print("[bold green]Server ready at http://localhost:5001/docs[/bold green]\n")
 
+    # Azure dynamically assigns a port via the PORT environment variable.
+    port = int(os.getenv("PORT", 8000))
+    is_dev = os.getenv("ENVIRONMENT") == "development"
+
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
+        port=port,
+        reload=is_dev,
         log_level="info"
     )
