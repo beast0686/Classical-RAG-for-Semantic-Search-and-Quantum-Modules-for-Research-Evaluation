@@ -14,6 +14,7 @@ This is a sign of what we call "Linearity Trap": while producing grammatically c
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	% Placeholder for Graph: Bar chart comparing BLEU/ROUGE vs Factual Accuracy/Coherence
 	\includegraphics[width=0.8\textwidth]{assets/bnmit/Graph.jpeg}
 	\caption{Automated lexical metrics versus human-evaluated factual accuracy across the three classical pipelines.}
@@ -26,6 +27,7 @@ However, at first, the dynamic Neo4j KG pipeline performed quite poorly. The ext
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	% Placeholder for Graph: Line/Bar graph showing BLEU and Coherence jumps
 	\includegraphics[width=0.7\textwidth]{assets/cicn/graph.png}
 	\caption{Performance improvements in BLEU and Coherence metrics after the implementation of the Constructive Hallucination key-override mechanism.}
@@ -62,6 +64,7 @@ It is crucial, prior to deploying the quantum parser, to identify the failure mo
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.7\textwidth]{assets/Journal/figure3.png}
 	\caption{Bar chart showcasing the Linearity Trap: Automated lexical metrics falsely indicating high classical performance on ambiguous queries, contrasted against actual factual fidelity.}
 	\label{fig:linearity_trap_barchart}
@@ -77,6 +80,7 @@ The experiments were conducted using the Ambiguity Challenge Dataset consisting 
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.8\textwidth]{assets/Journal/figure2.png}
 	\caption{Bar chart depicting comparative performance across all 15 queries of the Ambiguity Challenge Dataset, highlighting the quantum resolution of classical parsing failures.}
 	\label{fig:performance_15_queries}
@@ -105,6 +109,7 @@ The entire design of the dual entity model was developed into an interactive onl
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.8\textwidth]{assets/website/homepage.jpeg}
 	\caption{Hybrid system homepage interface for query execution and interaction.}
 	\label{fig:website_homepage}
@@ -116,6 +121,7 @@ The deployment user interface clearly highlights the direct correlation between 
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.8\textwidth]{assets/website/What advancements relates to India _ 19/query results homepage.png}
 	\caption{Query results interface for $k=19$, illustrating a dense, contextually rich generative output based on deep retrieval.}
 	\label{fig:k19_results}
@@ -125,6 +131,7 @@ By contrast, when the retrieval depth is limited to $k=3$, the output produced f
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=1\textwidth]{assets/website/What advancements relates to India _ 3/same query ran on k value 3 shows poor results.png}
 	\hfill
 	\includegraphics[width=1\textwidth]{assets/website/What advancements relates to India _ 3/k value 3 shows poor metrics.png}
@@ -134,6 +141,7 @@ By contrast, when the retrieval depth is limited to $k=3$, the output produced f
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.6\textwidth]{assets/website/What advancements relates to India _ 3/exported kg for k value 3.png}
 	\caption{Exported visual representation of the sparse knowledge graph generated due to insufficient retrieval depth ($k=3$).}
 	\label{fig:k3_graph}
@@ -147,6 +155,7 @@ To transparently demonstrate how the decision-making process of the system occur
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=1\textwidth]{assets/website/Comparision/comparision homepage.png}
 	\hfill
 	\includegraphics[width=1\textwidth]{assets/website/Comparision/generated comparison and table.png}
@@ -156,6 +165,7 @@ To transparently demonstrate how the decision-making process of the system occur
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=1\textwidth]{assets/website/Metrics/metrics homepage.png}
 	\hfill
 	\includegraphics[width=1\textwidth]{assets/website/Metrics/metrics filter.png}
@@ -169,6 +179,7 @@ The website has a separate tab for Quantum Research where users can view the sim
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.7\textwidth]{assets/website/Quantum Research/quantum research homepage.png}
 	\includegraphics[width=0.7\textwidth]{assets/website/Quantum Research/ambiguity resolution demo.png}
 	\includegraphics[width=0.7\textwidth]{assets/website/Quantum Research/insight analysis for the query.png}
@@ -180,6 +191,7 @@ As shown in Figure~\ref{fig:advantage_vs_complexity_scatter} through a scatter d
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.7\textwidth]{assets/Journal/figure4.png}
 	\caption{Scatter plot depicting the direct relationship between query syntactic complexity and the realized quantum advantage.}
 	\label{fig:advantage_vs_complexity_scatter}
@@ -191,6 +203,7 @@ The user interface (UI) includes an edge case assessment environment. In the cas
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.8\textwidth]{assets/website/Unrelated query yields better plainLLM answer/model comparison.png}
 	\caption{Edge case comparison interface demonstrating the baseline LLM outperforming the hybrid RAG system on out-of-domain queries.}
 	\label{fig:edge_case}
@@ -200,6 +213,7 @@ The website has also been modified to support mobile devices. Figure~\ref{fig:mo
 
 \begin{figure}[htbp]
 	\centering
+	\captionsetup{justification=centering}
 	\includegraphics[width=0.3\textwidth]{assets/website/Mobile/mobile view query results.jpeg}
 	\includegraphics[width=0.3\textwidth]{assets/website/Mobile/mobile view graph pop up button .jpeg}
 	\includegraphics[width=0.3\textwidth]{assets/website/Mobile/mobile view clicked on a document.jpeg}

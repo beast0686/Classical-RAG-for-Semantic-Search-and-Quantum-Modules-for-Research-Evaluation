@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a9123374-dcba-41e5-87dd-ab885f116e7e" name="Changes" comment="feat: humanized complete report">
+      <change beforePath="$PROJECT_DIR$/Report/assets/Journal/figure2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/Journal/figure3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/Journal/figure4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/Journal/flowchart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/bnmit/Graph.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/bnmit/Vertical CRAG Pipeline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/cicn/flowchart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/cicn/graph.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/deployment/Chapter X Deployment Details.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/deployment/Screenshot 2026-04-02 162800.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/deployment/Screenshot 2026-04-02 162816.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/deployment/Screenshot 2026-04-02 162900.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/deployment/Screenshot 2026-04-02 162913.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/deployment/Screenshot 2026-04-03 133517.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/flowchart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/misleneous/ack.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/misleneous/ack.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/misleneous/cover_certificate.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/misleneous/cover_certificate.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/misleneous/cover_certificate_ack.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/3 other query results only with different k values/k12 tell me about the history of the world query.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/3 other query results only with different k values/k16 tell me about good travel spots.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/3 other query results only with different k values/k5 is tesla a good company.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Comparision/comparision homepage.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Comparision/generated comparison and table.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Comparision/give feedback window.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Comparision/submit feedback - helps build metrics in real time.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Metrics/metrics filter.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Metrics/metrics homepage.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Metrics/metrics raw data based on those submitted by users.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Quantum Research/ambiguity resolution demo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Quantum Research/complexity vs quantum advantage, conclusion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Quantum Research/exprimental evidence screen with graphs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Quantum Research/flowchart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Quantum Research/insight analysis for the query.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Quantum Research/quantum research homepage.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Unrelated query yields better plainLLM answer/model comparison.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/Unrelated query yields better plainLLM answer/query results regarding the 2026 hungary election.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 19/clicked on a node on the graph.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 19/exported knowledge graph.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 19/open source button when clicked.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 19/query results homepage.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 19/when clicked on one of the documents on retrieved documents section.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 3/exported kg for k value 3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 3/k value 3 shows poor metrics.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/What advancements relates to India _ 3/same query ran on k value 3 shows poor results.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/homepage.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/assets/website/note.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/abstract.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/conclusion.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/future_scope.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/introduction.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/literature_survery.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/methodology.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/proposed_method.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/results_and_discussion.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/chapters/system_reqs.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/qrag.tex" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/ref.bib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report/report_template.cls" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;beast0686&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/beast0686/Classical-RAG-for-Semantic-Search-and-Quantum-Modules-for-Research-Evaluation.git&quot;,
+    &quot;accountId&quot;: &quot;fbda902a-4ac7-46e3-8ef6-04a24b346d20&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="3COq1opZS6ca4ZLLL2uyDYMgbII" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;LaTeX.qrag.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;development&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Data/BNMIT/Engineering CSE/Classical-RAG-for-Semantic-Search-and-Quantum-Modules-for-Research-Evaluation&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Data\BNMIT\Engineering CSE\Classical-RAG-for-Semantic-Search-and-Quantum-Modules-for-Research-Evaluation" />
+    </key>
+  </component>
+  <component name="RunManager" selected="LaTeX.qrag">
+    <configuration name="qrag bibliography" type="BIBTEX_RUN_CONFIGURATION" factoryName="LaTeX configuration factory">
+      <texify-bibtex>
+        <compiler>BIBTEX</compiler>
+        <compiler-path />
+        <compiler-arguments />
+        <envs />
+        <main-file>$PROJECT_DIR$/Report/qrag.tex</main-file>
+        <aux-dir>$PROJECT_DIR$/Report</aux-dir>
+        <latex-distribution>TEXLIVE</latex-distribution>
+      </texify-bibtex>
+      <method v="2" />
+    </configuration>
+    <configuration name="qrag" type="LATEX_RUN_CONFIGURATION" factoryName="LaTeX configuration factory" temporary="true">
+      <texify>
+        <compiler>PDFLATEX</compiler>
+        <compiler-path />
+        <pdf-viewer>none</pdf-viewer>
+        <require-focus>true</require-focus>
+        <viewer-command />
+        <compiler-arguments />
+        <envs />
+        <expand-macros-in-environment-variables>false</expand-macros-in-environment-variables>
+        <before-run-command />
+        <main-file>$PROJECT_DIR$/Report/qrag.tex</main-file>
+        <output-path>$PROJECT_DIR$/Report</output-path>
+        <auxil-path>{projectDir}/auxil</auxil-path>
+        <working-directory>{mainFileParent}</working-directory>
+        <compile-twice>true</compile-twice>
+        <output-format>PDF</output-format>
+        <latex-distribution>MODULE_SDK</latex-distribution>
+        <has-been-run>true</has-been-run>
+        <bib-run-config>[BibTeX.qrag bibliography]</bib-run-config>
+        <makeindex-run-config>[]</makeindex-run-config>
+      </texify>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="LaTeX.qrag" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+        <option value="bundled-js-predefined-d6986cc7102b-c7e53b3be11b-JavaScript-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a9123374-dcba-41e5-87dd-ab885f116e7e" name="Changes" comment="feat: humanized complete report" />
+      <created>1776266752744</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776266752744</updated>
+      <workItem from="1776266754132" duration="219000" />
+      <workItem from="1776266982987" duration="142000" />
+      <workItem from="1776267459997" duration="351000" />
+      <workItem from="1776267857407" duration="312000" />
+      <workItem from="1776268904415" duration="1052000" />
+      <workItem from="1776276984899" duration="26000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/client/node_modules/tailwindcss/stubs/tailwind.config.js" />
+        <option value="$PROJECT_DIR$/client/node_modules/tailwindcss/stubs/tailwind.config.cjs" />
+        <option value="$PROJECT_DIR$/client/node_modules/cac/mod.js" />
+      </list>
+    </option>
+  </component>
+</project>

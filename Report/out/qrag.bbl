@@ -1,0 +1,155 @@
+\begin{thebibliography}{10}
+
+\bibitem{lewis2021rag}
+Patrick Lewis et~al.
+\newblock Retrieval-augmented generation for knowledge-intensive nlp tasks.
+\newblock {\em arXiv preprint arXiv:2005.11401}, 2021.
+
+\bibitem{liu2023lostmiddle}
+Nelson~F. Liu et~al.
+\newblock Lost in the middle: How language models use long contexts.
+\newblock {\em arXiv preprint arXiv:2307.03172}, 2023.
+
+\bibitem{sgic2025}
+Guanhua Chen, Yutong Yao, Lidia~S. Chao, Xuebo Liu, and Derek~F. Wong.
+\newblock Self-guided iterative calibration framework for rag.
+\newblock {\em ACL Long Papers}, 2025.
+
+\bibitem{concept2025rag}
+Cheng-Yu Lin and Jyh-Shing Jang.
+\newblock Concept-based rag models: A high-accuracy fact retrieval approach.
+\newblock {\em FinNLP}, 2025.
+
+\bibitem{trustworthy2025}
+Xinwei Wu, Haojie Li, Hongyu Liu, Xinyu Ji, Ruohan Li, Yule Chen, and Yigeng
+  Zhang.
+\newblock Uncovering the fragility of trustworthy llms through textual
+  ambiguity.
+\newblock {\em arXiv preprint}, 2025.
+
+\bibitem{racquet2025}
+Alberto Testoni, Barbara Plank, and Raquel Fern{\'a}ndez.
+\newblock Racquet: Referential ambiguity in llms.
+\newblock {\em ACL}, 2025.
+
+\bibitem{havlicek2019quantum}
+Vojtech Havlicek et~al.
+\newblock Supervised learning with quantum-enhanced feature spaces.
+\newblock {\em Nature}, 567:209--212, 2019.
+
+\bibitem{schuld2020circuit}
+Maria Schuld et~al.
+\newblock Circuit-centric quantum classifiers.
+\newblock {\em Physical Review A}, 101(3), 2020.
+
+\bibitem{schuld2021encoding}
+Maria Schuld et~al.
+\newblock Effect of data encoding on the expressive power of variational
+  quantum machine learning models.
+\newblock {\em Physical Review A}, 103(3), 2021.
+
+\bibitem{coeke2020qnlp}
+Bob Coecke et~al.
+\newblock Foundations for near-term quantum natural language processing.
+\newblock {\em arXiv preprint arXiv:2012.03755}, 2020.
+
+\bibitem{kartsaklis2021lambeq}
+Dimitri Kartsaklis et~al.
+\newblock lambeq: An efficient high-level qnlp toolkit.
+\newblock {\em arXiv preprint arXiv:2110.04236}, 2021.
+
+\bibitem{preskill2018nisq}
+John Preskill.
+\newblock Quantum computing in the nisq era and beyond.
+\newblock {\em arXiv preprint arXiv:1801.00862}, 2018.
+
+\bibitem{das2025hybrid}
+P.~S. Das.
+\newblock Hybrid quantum deep learning models: Architectures, applications and
+  research outlook.
+\newblock {\em International Journal for Multidisciplinary Research},
+  7(5):1--12, 2025.
+
+\bibitem{resch2021quantum}
+S.~Resch and S.~N. Ghosh.
+\newblock Quantum and classical machine learning performance comparisons.
+\newblock In {\em Proceedings of the IEEE International Conference on Rebooting
+  Computing (ICRC)}, 2021.
+
+\bibitem{harmonization2025}
+Shicheng Xu, Liang Pang, Huawei Shen, and Xueqi Cheng.
+\newblock A theory for token-level harmonization in retrieval-augmented
+  generation.
+\newblock {\em ICLR Proceedings}, 2025.
+
+\bibitem{jin2025causality}
+Z.~Jin et~al.
+\newblock Causality for natural language processing.
+\newblock {\em arXiv preprint arXiv:2504.14530}, 2025.
+
+\bibitem{syntactic2025}
+Daria Chernova and Tatiana Chernigovskaya.
+\newblock Syntactic ambiguity resolution in neural language models: A local
+  attachment bias.
+\newblock {\em CEUR-WS}, 2025.
+
+\bibitem{mandviwalla2018ibm}
+A.~Mandviwalla, K.~Ohshiro, and B.~Ji.
+\newblock Implementing grover's algorithm on the ibm quantum computers.
+\newblock In {\em 2018 IEEE International Conference on Big Data (Big Data)},
+  pages 2531--2537, 2018.
+
+\bibitem{zhang2025quantum}
+Y.~Zhang et~al.
+\newblock A quantum framework for protein binding-site structure prediction on
+  utility-level quantum processors.
+\newblock {\em Advanced Science}, 12(5):2513641, 2025.
+
+\bibitem{kim2023evidence}
+Youngseok Kim et~al.
+\newblock Evidence for the utility of quantum computing before fault tolerance.
+\newblock {\em Nature}, 618(7965):500--505, 2023.
+
+\bibitem{cao2020quantum}
+Yudong Cao et~al.
+\newblock Quantum algorithms for supervised and unsupervised machine learning.
+\newblock {\em arXiv preprint arXiv:2007.03661}, 2020.
+
+\bibitem{vats2025quantumnlp}
+Arpita Vats, Rahul Raja, Ashish Kattamuri, and Abhinav Bohra.
+\newblock Quantum natural language processing: A comprehensive survey of
+  models, architectures, and evaluation methods.
+\newblock In {\em Proceedings of the QuantumNLP: Integrating Quantum Computing
+  with Natural Language Processing}, pages 53--64. Association for
+  Computational Linguistics, 2025.
+
+\bibitem{llmqas2025}
+Wei Chen, James Smith, and Rahul Patel.
+\newblock Optimizing ansatz design in quantum generative adversarial networks
+  using large language models.
+\newblock {\em arXiv preprint arXiv:2503.12884}, 2025.
+
+\bibitem{russo2024layerwise}
+Vincent Russo and Andrea Mari.
+\newblock Quantum error mitigation by layerwise richardson extrapolation.
+\newblock {\em Physical Review A}, 110(6):062420, 2024.
+
+\bibitem{extrapolative2026}
+Mark Johnson, Li~Zhao, and Min-Jae Kim.
+\newblock Extrapolative quantum error mitigation in continuous-variable systems
+  beyond the training horizon.
+\newblock {\em arXiv preprint arXiv:2603.08548}, 2026.
+
+\bibitem{evalvariants2026}
+Carlos Garcia, Anna Lee, and Hao Wang.
+\newblock Evaluating retrieval-augmented generation variants for natural
+  language-based sql and api call generation.
+\newblock {\em arXiv preprint arXiv:2602.07086}, 2026.
+
+\bibitem{radar2025qml}
+Stefan Muller, Giovanni Rossi, and Gupta.
+\newblock Radar signal classification with quantum machine learning: Ansatz
+  depth impact on expressibility.
+\newblock {\em MDPI}, 15(2):370, 2025.
+
+\end{thebibliography}
