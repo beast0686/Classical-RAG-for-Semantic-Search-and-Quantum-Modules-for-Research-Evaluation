@@ -16,43 +16,51 @@
 
 \begin{document}
 
-\includepdf[pages={1,2,3}]{assets/misleneous/cover_certificate_ack.pdf}
-\renewcommand\cftsecafterpnum{\vskip-10pt}
+    \includepdf[pages={1,2,3}]{assets/misleneous/cover_certificate_ack.pdf}
+    \renewcommand\cftsecafterpnum{\vskip-10pt}
 
-\pagenumbering{roman}
-\include{chapters/abstract}
+% --- FRONTMATTER SETTINGS ---
+    \pagenumbering{roman}
+    \pagestyle{plain}         % Removes fancy headers/footers, keeps Roman page numbers
+    \tocloftpagestyle{plain}  % Enforces plain style on the first page of TOC/LOF/LOT
 
-\tableofcontents
-\listoffigures
-\listoftables
+    \include{chapters/abstract}
 
-\clearpage
-\pagenumbering{arabic}
-\pagestyle{fancy}
+    \tableofcontents
+    \clearpage
+    \listoffigures
+    \clearpage
+    \listoftables
+    \clearpage
+% ----------------------------
+
+% --- MAINMATTER SETTINGS ---
+    \pagenumbering{arabic}
+    \pagestyle{fancy}         % Restores custom headers and footers for the chapters
 
 %\includepdf[pages=-]{assets/ch1.pdf}
-\include{chapters/introduction}
+    \include{chapters/introduction}
 
 %\includepdf[pages=-]{assets/ch2.pdf}
-\include{chapters/literature_survery}
+    \include{chapters/literature_survery}
 
 %\includepdf[pages=-]{assets/ch3.pdf}
-\include{chapters/system_reqs}
+    \include{chapters/system_reqs}
 
 %\includepdf[pages=-]{assets/ch4.pdf}
-\include{chapters/proposed_method}
+    \include{chapters/proposed_method}
 
 %\includepdf[pages=-]{assets/ch5.pdf}
-\include{chapters/methodology}
+    \include{chapters/methodology}
 
 %\includepdf[pages=-]{assets/ch6.pdf}
-\include{chapters/results_and_discussion}
+    \include{chapters/results_and_discussion}
 
-\include{chapters/conclusion}
+    \include{chapters/conclusion}
 
-\include{chapters/future_scope}
+    \include{chapters/future_scope}
 
-\bibliographystyle{unsrt}
-\bibliography{ref}
+    \bibliographystyle{unsrt}
+    \bibliography{ref}
 
 \end{document}
