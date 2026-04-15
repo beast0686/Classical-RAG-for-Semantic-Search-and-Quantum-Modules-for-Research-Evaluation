@@ -1,133 +1,82 @@
 \chapter{Methodology}
 
-The purpose of this chapter is to outline the approach used for designing and implementing the QRAG framework. The research method is based on the combination of classical RAG pipelines with QNLP approaches to address the problem of syntactic ambiguity in user queries. The framework is designed as a hybrid system that uses quantum approaches only when necessary to process complex queries.
+This chapter describes the technical architecture, infrastructure design, and programmatic algorithms used to implement the dual entity system. Following the theoretical approach provided by the Farm-Fetching model from the previous chapter, this section describes the technical implementation of the classical RAG model, along with the parameters of its implementation using QML modules.
 
-\section{System Architecture Overview}
+\section{System Design and Infrastructure}
 
-QRAG works with the help of a modular and decoupled system architecture consisting of different layers such as query processing, ambiguity detection, hybrid execution, retrieval, and response generation. All these work independently but have a defined interface for communicating with each other.
+A highly decoupled cloud-native architecture has been developed to guarantee that the high performance classical pipeline does not interfere with the performance of the dedicated quantum co-processor.
 
-The entire process flow starts from user interaction to structural analysis of the query and then depends on the complexity, leads the process either to traditional or quantum processing route.
-
-\section{Model Pipeline Steps}
-
-The complete processing pipeline of the QRAG system is summarized in Table~\ref{tab:pipeline_steps}, which outlines the sequence of operations performed from query input to response generation.
-
-\begin{table}[htbp]
-    \centering
-    \caption{QRAG Model Pipeline Steps}
-    \label{tab:pipeline_steps}
-    \begin{tabular}{|c|p{4cm}|p{7cm}|}
-        \hline
-        \textbf{Step} & \textbf{Component} & \textbf{Description} \\
-        \hline
-        1 & User Input & User submits natural language query \\
-        \hline
-        2 & Preprocessing & Tokenization, normalization, and POS tagging \\
-        \hline
-        3 & Ambiguity Detection & Detects syntactic ambiguity using predefined signatures \\
-        \hline
-        4 & Routing Mechanism & Routes query to classical or quantum pipeline \\
-        \hline
-        5 & Classical Pipeline & SpaCy parsing and vector-based retrieval for simple queries \\
-        \hline
-        6 & Quantum Pipeline & VQC-based encoding and entanglement for ambiguous queries \\
-        \hline
-        7 & Contextual Realignment & Selects correct interpretation of the query \\
-        \hline
-        8 & Retrieval Module & Fetches relevant documents from vector database \\
-        \hline
-        9 & Generation Module & LLM generates final response \\
-        \hline
-    \end{tabular}
-\end{table}
-
-The execution and visualization of these pipeline steps are illustrated in Figure~\ref{fig:pipeline_steps_viz}.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{assets/Journal/figure2.png}
-    \hfill
-    \includegraphics[width=0.45\textwidth]{assets/Journal/figure3.png}
-    \\
-    \vspace{0.5cm}
-    \includegraphics[width=0.5\textwidth]{assets/Journal/figure4.png}
-    \caption{Visualization of QRAG model pipeline execution steps.}
-    \label{fig:pipeline_steps_viz}
-\end{figure}
-
-\section{Data Preparation and Corpus Construction}
-
-The proposed system makes use of a diverse database containing roughly 130,000 entries stored in MongoDB. The preprocessing of this database takes place through normalization, tokenization, and embedding creation for vector-based searches.
-
-\section{Ambiguity Detection Strategy}
-
-A light weight POS tagger is used to find syntactic ambiguity. The algorithm recognizes the pattern such as attachment of preposition, reduced relative clauses, and coordination ambiguity. Queries with patterns matching the above are passed to quantum processing.
-\section{Algorithm Comparison}
-
-A comparative analysis of classical and quantum approaches used in the system is presented in Table~\ref{tab:algorithm_comparison}. This comparison highlights the advantages of hybrid processing.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Comparison of Classical and Quantum Algorithms}
-    \label{tab:algorithm_comparison}
-    \begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3cm}|}
-        \hline
-        \textbf{Aspect} & \textbf{Classical Approach} & \textbf{Quantum Approach} & \textbf{Observation} \\
-        \hline
-        Model Type & SpaCy Parser / SGD & Variational Quantum Classifier (VQC) & Hybrid usage improves efficiency \\
-        \hline
-        Complexity Handling & Linear relationships & Non-linear relationships via Hilbert space & Quantum better for ambiguity \\
-        \hline
-        Processing Speed & Fast & Slower & Classical preferred for simple queries \\
-        \hline
-        Accuracy (Ambiguous Queries) & Lower & Higher & Quantum shows advantage \\
-        \hline
-        Resource Requirement & Low & High & Selective usage required \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\section{Classical Processing Pipeline}
-
-The classical pipeline handles low-complexity queries using dependency parsing and vector-based retrieval. It ensures low latency and efficient processing for real-time applications.
-
-\section{Quantum Processing Pipeline}
-
-Query encoding in the quantum pipeline uses rotation gates and dependency encoding uses entanglement realized using the CZ gate. The circuit is then run on a quantum backend to interpret which way to go.
-
-\section{Variational Quantum Circuit Design}
-
-The Variational Quantum Circuit (VQC) consists of alternating rotation and entanglement layers, optimized using classical optimizers such as COBYLA. This enables the system to learn complex linguistic structures.
-
-\section{Contextual Realignment}
-
-The system refines query interpretation before retrieval, ensuring alignment between query intent and retrieved context. This significantly improves semantic accuracy compared to traditional RAG systems.
-
-\section{Retrieval and Generation}
-
-The disambiguated query is used to retrieve relevant documents from MongoDB Atlas. The retrieved context is passed to an LLM for generating the final response.
-
-The structure of relationships between retrieved entities is illustrated in Figure~\ref{fig:retrieval_graphs}.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.48\textwidth]{assets/cicn/graph.png}
-    \caption{Knowledge graph representations illustrating relationships between retrieved entities.}
-    \label{fig:retrieval_graphs}
-\end{figure}
-
-\section{Evaluation Methodology}
-
-The system is evaluated using an ambiguity-focused dataset. The evaluation metrics include:
+\subsection{Cloud Backend and Classical Databases}
+The classical pipeline is run through a custom backend API (ragqrag-backend) which has been designed and launched on Microsoft Azure cloud. It serves as the traffic handler responsible for receiving requests coming from the tech interactive web domain. Data storage is split into two parts:
 \begin{itemize}
-    \item Context Relevance (CR)
-    \item Answer Faithfulness (AF)
-    \item Answer Relevance (AR)
+	\item \textbf{Vector Storage:} MongoDB Atlas is being used to provide high-dimensional embedding for a collection of 130,000 documents to perform semantic similarity searches quickly.
+	\item \textbf{Graph Storage:} An instance of Neo4j graph database is running simultaneously to create the map of relations and entities required for the generative models.
 \end{itemize}
 
-\section{Implementation Strategy}
+\subsection{Quantum Hardware Integration}
+For implementing the QRAG module with structural ambiguity queries, the Azure backend uses the IBM Quantum Cloud platform through the Qiskit Application Programming Interface (API). The entire system architecture is deliberately built to use the IBM Brisbane 127-qubit Quantum Processing Unit (QPU).
 
-The system is implemented using FastAPI (backend), React (frontend), MongoDB Atlas (vector storage), Neo4j (graph representation), and Qiskit (quantum execution), following a scalable cloud-native architecture.
+\section{Algorithms and Methods}
 
-\bigskip\noindent
-The methodology combines classical efficiency with selective quantum processing to improve ambiguity resolution while maintaining performance and scalability.
+As for the operation process, the execution of both classical and quantum elements relies on two computational algorithms and a detailed mathematical evaluation hierarchy.
+
+\subsection{Part I Algorithm: Constructive Hallucination and Parsing}
+
+For the development of the classical Neo4j Knowledge Graph, an automatic pipeline was introduced based on the Qwen3 Large Language Model (LLM). To avoid the generation of unsupported connections between nodes and to match the specified data schema structure, a specific programmatic intervention was constructed during the parsing phase.
+
+The algorithm for enriching graphs with the help of an LLM is formulated as follows:
+\begin{enumerate}
+	\item \textbf{Entity Extraction:} The LLM processes the text fragment and returns JSON with entities and relations;
+	\item \textbf{Key Override Mechanism:} Before inserting the JSON object into the database, the backend parser automatically overrides all the relationship keys, dynamically generated by the LLM, with a single “ideas” key to ensure complete adherence to the database schema;
+	\item \textbf{Anomaly Detection:} The algorithm identifies relational pairs under the “ideas” key not explicitly supported by any information in the source text;
+	\item \textbf{Constructive Validation:} The algorithm performs another search for vectors in the whole corpus to verify the implicit entity; and
+	\item \textbf{Injection:} If the verification test passes, the hallucinatory relation is finally injected into the Neo4j graph.
+\end{enumerate}
+
+\subsection{Part II Algorithm: QML Execution and Benchmarking}
+
+When the Ambiguity Controller invokes a question and feeds it into the quantum processing pipeline, the Variational Quantum Classifier (VQC) comes into play. It is tuned specifically to run under NISQ constraints.
+
+Here is the way the algorithm runs on the quantum processing unit (QPU):
+\begin{enumerate}
+	\item \textbf{Circuit Initialization:} The dependency tree is mapped to the qubit registers. Word tokens are encoded using rotation gates (Ry) while dependencies are entangled using controlled-Z (CZ).
+	\item \textbf{Optimization Loop:} The circuit is processed in the IBM Brisbane 127-qubit QPU with a standard number of shots (say, 4096) to generate the probability distribution.
+	\item \textbf{Classical Update:} The classical COBYLA (Constrained Optimization BY Linear Approximations) optimizer evaluates the cost function and tunes the parameters ($\theta$).
+	\item \textbf{Classification:} The final expectation value is the result - disambiguated query.
+\end{enumerate}
+
+In order to estimate the performance advantage brought by the quantum integration, the quantum database searching based on Grover’s Algorithm was used. In the first phase of the process – the “Engine Test” in Brisbane QPU – this approach showed significant improvements, delivering up to 190x times faster computations compared to classical brute-force searching baselines.
+
+\subsection{Evaluation Methodology}
+
+In order to objectively measure the efficiency of the classical and quantum pipelines, a multilevel evaluation methodology has been developed. While the generative process is evaluated using linguistic parameters, the quantum-based retrieval algorithm and the quantum processor itself must be measured using custom-made statistical and telemetric approaches.
+
+\subsubsection{Generative Assessment: The RAGAS Framework}
+For evaluating the final stage of generation, the software implements the RAGAS (Retrieval Augmented Generation Assessment) approach, using the ``LLM as a judge" approach. The key performance indicators analyzed include:
+\begin{itemize}
+	\item \textbf{Answer Faithfulness ($F$):} Measuring how faithful the generated answer is to the facts provided by the retrieved context. Calculated by extracting the claims from the answer and verifying them against the context:
+	\begin{equation}
+		F = \frac{|V|}{|C|}
+	\end{equation}
+	where $|V|$ stands for the number of claims verified by the retrieved context, and $|C|$ stands for the total number of claims in the generated answer.
+	
+	\item \textbf{Context Relevance ($CR$):} Penalizing the inclusion of redundant or unrelated material. Defined as the proportion of sentences retrieved in the context which are necessary for answering the question:
+	\begin{equation}
+		CR = \frac{|S_{relevant}|}{|S_{total}|}
+	\end{equation}
+	where $|S_{relevant}|$ stands for the number of relevant sentences, and $|S_{total}|$ stands for the total number of sentences retrieved from the source.
+\end{itemize}
+
+\subsubsection{Quantum Retrieval Metrics and Hardware Telemetry}
+The quantum-based disambiguation engine is measured against a classic engine for its retrieval performance before entering the generative phase. Retrieval performance metrics involve MRR, NDCG@10, and Top-1 accuracy.
+
+With regard to the fact that the QPU works in the NISQ regime, the assessment of the performance of quantum pipelines is conducted with rigorous hardware telemetry and statistical tests to minimize the impact of noise:
+\begin{itemize}
+	\item \textbf{Hardware Execution Telemetry:} For each execution of the quantum pipeline on the IBM Brisbane QPU, metrics like quantum circuit depth, gate count, and total wall-clock time spent on quantum computing (approx. 2–3 seconds) are measured. Also measured is the classical CPU latency of the Azure server (approx. 11-13 ms)..
+	\item \textbf{Wilcoxon Signed-Rank Test:} This non-parametric test is used to measure the significance of the performance gap observed on the Ambiguity Challenge Dataset (n=15). To validate mathematically the fact that the performance improvement (e.g., 93.3\% Top-1 accuracy versus 40.0\% for the classical baseline) is caused by the quantum advantage provided by the CZ entanglement topology rather than a processor artifact, a p-value of approx. 0.032 must be achieved.
+	\item \textbf{Ablation Studies:} These are part of the process in evaluating quantum performance by performing specific tests (such as ablation of CZ entangling gates) to measure the drift in the probability distribution (e.g., the shift from tightly bound 25.0000 to 38.0000). This proves the need to implement tensor networks physically. In addition, some tests avoid the use of the routing controller to determine the "Majority Class Bias" (probability converges to 24.0000) when linear queries are forced on the QPU.
+\end{itemize}
+
+\section{Summary}
+
+In this chapter, the design of the proposed system architecture has been detailed. Specifically, the architecture uses the custom Azure backend interfaced with MongoDB and Neo4j for high throughput and strict control by using JSON parsing rules. Moreover, the implementation involves integration with the 127-qubit IBM Brisbane quantum processor as well as COBYLA optimization of variational circuits, achieving quantum advantages for resolving ambiguities. Overall performance is assessed based on RAGAS metrics for the generation phase and telemetry including Wilcoxon tests and ablations for the hardware execution.

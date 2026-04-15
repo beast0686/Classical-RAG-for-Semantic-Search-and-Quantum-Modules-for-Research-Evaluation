@@ -1,142 +1,116 @@
 \chapter{Proposed Method}
 
-The following chapter presents the methodology that will be adopted in the Quantum Retrieval-Augmented Generation (QRAG). QRAG will adopt an architectural approach, whereby it will combine classical methods of retrieval with quantum-based methods of syntactic disambiguation. The primary aim of QRAG is to improve semantic understanding of structural ambiguous queries without compromising efficiency.
+The chapter that follows describes the methodological process adopted for implementing a two-entity architecture that incorporates Classical RAG for Semantic Search with Quantum Modules for Research Evaluation. As per the Farm-Fetching approach, this model attempts to fully exploit the benefits of classical retrieval models before resorting to the use of the Quantum RAG model that is solely utilized for the purposes of performing deep syntactic disambiguation. The ultimate aim of the research is to improve the semantic analysis of structurally ambiguous queries while conducting dense research evaluation through the incorporation of two highly sophisticated computational modules into a unified hybrid deep learning model \cite{das2025hybrid, resch2021quantum}.
 
-\section{Overview of the QRAG Framework}
+\section{Overview of the Dual-Entity Architecture}
 
-The QRAG model suggests the development of a hybrid pipeline that is tightly regulated based on the complexity of each query. Instead of using quantum computing for all cases, the algorithm recognizes the patterns of ambiguity and uses quantum processing only when necessary.
+The system is engineered as a two-pronged hybrid pipeline that adapts to the nature of the user’s query. Results from experiments performed as part of testing our correlator show that classical algorithms are more efficient than quantum solutions in large linear semantic queries. As a result, quantum computing techniques are not utilized throughout the entire process. The system builds up on the principles of a highly optimized classical scheme (Phase I) and uses the QRAG methodology (Phase II) in cases where classical solutions cannot cope due to local attachments.
 
-The workflow consists of three major stages:
+The general structure begins with creation of a knowledge base and continues in stages as follows:
 \begin{enumerate}
-    \item Ambiguity Detection
-    \item Hybrid Processing (Classical or Quantum)
-    \item Contextual Realignment and Generation
+	\item \textbf{Part I: Classical RAG Infrastructure} (The high-throughput semantic foundation)
+	\item \textbf{The Bridge: Ambiguity Detection and Routing} (The traffic controller)
+	\item \textbf{Part II: The QRAG Framework} (The deep-tech quantum disambiguation engine)
+	\item \textbf{Contextual Realignment and Generation} (The synthesis phase)
 \end{enumerate}
 
-The overall architecture of the proposed system is illustrated in Figure~\ref{fig:vertical_crag}, which depicts the integration of classical and quantum pipelines within a unified framework.
+Figure~\ref{fig:vertical_crag} functions as the primary high-level sequence diagram of the suggested system, presenting the overall sequential flow of data across the combination of the two architectures.
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.85\textwidth]{assets/bnmit/Vertical CRAG Pipeline.png}
-    \caption{Vertical CRAG Pipeline diagram illustrating the hybrid processing flow.}
-    \label{fig:vertical_crag}
+	\centering
+	\includegraphics[width=0.85\textwidth]{assets/bnmit/Vertical CRAG Pipeline.png}
+	\caption{Vertical CRAG sequence diagram illustrating the hybrid processing flow.}
+	\label{fig:vertical_crag}
 \end{figure}
 
-Additionally, the high-level process flow of ambiguity detection and routing is shown in Figure~\ref{fig:journal_flowchart}.
+\section{Part I: Classical RAG for Semantic Search}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.4\textwidth]{assets/Journal/flowchart.png}
-    \caption{Overall process flowchart of ambiguity detection and routing pipeline.}
-    \label{fig:journal_flowchart}
-\end{figure}
-
-\section{Ambiguity Detection Mechanism}
-
-The first stage of the process deals with detecting any syntactic ambiguities present in the query. To accomplish this, a simple POS tagging technique is used to analyze the syntax of the query.
-
-The function of ambiguity detection is as follows:
-
-\[
-    \delta(q) =
-    \begin{cases}
-        1, & \text{if } q \text{ contains ambiguity signatures} \\
-        0, & \text{otherwise}
-    \end{cases}
-\]
-
-where $\delta(q)$ determines whether the query should be processed using the quantum pipeline or the classical pipeline.
-
-The system identifies ambiguity using predefined signature patterns such as:
-\begin{itemize}
-    \item Prepositional Phrase Attachment
-    \item Reduced Relative Clauses
-    \item Coordination Ambiguity
-\end{itemize}
-
-These patterns represent structural configurations where classical parsers are prone to failure.
-
-\section{Hybrid Processing Architecture}
-
-Once ambiguity is detected, the query is routed to one of two processing pipelines.
-
-\subsection{Classical Processing Pipeline}
-
-In the case of simple queries, a classical natural language processing pipeline is used. It involves dependency parsing, vector-based retrieval, and contextual information creation for the process of answer formation. The design of such a pipeline is geared towards ensuring that simple queries will not take long to be processed.
-
-\subsection{Quantum Processing Pipeline}
-
-In cases where the input queries are identified as ambiguous, the quantum pipeline is triggered. In this step, the query is translated to its quantum form through the Variational Quantum Classifier (VQC).
-
-The tokens that make up the input query are mapped to qubits using rotation gates:
-
-\[
-    |\psi(x)\rangle = \bigotimes_{i=1}^{N} R_y(\phi(x_i)) |0\rangle_i
-\]
-
-Grammatical dependencies between tokens are modeled using Controlled-Z (CZ) entangling gates, enabling the system to capture non-local relationships between words.
-
-The variational quantum circuit is defined as:
-
-\[
-    U(\theta) = \prod_{l=1}^{L} \left(U_{ent}^{(l)} \cdot U_{rot}^{(l)}(\theta_l)\right)
-\]
-
-The final classification is obtained by measuring the expectation value of an observable, which determines the correct syntactic interpretation.
-
-\section{Contextual Realignment}
-
-The next step after processing is to determine the proper interpretation for the query. This will ensure that the information collected will be in line with the meaning of the query itself.
-
-The interpretation is known as:
-
-\[
-    C_{interp} =
-    \begin{cases}
-        S_1, & \text{if } \hat{y} = 1 \\
-        S_0, & \text{otherwise}
-    \end{cases}
-\]
-
-This refined interpretation is then used to reformulate the query before retrieval and generation.
-
-\section{Integration with Retrieval-Augmented Generation}
-
-After the query disambiguation process, the retrieval stage takes place. Here, relevant documents are identified using semantic similarity from the vector database. The generated context is then fed into the generation model, thereby increasing the accuracy of the facts generated and reducing hallucinations.
-
-\section{Algorithmic Workflow}
-
-The detailed workflow of the proposed method is illustrated in Figure~\ref{fig:cicn_flowchart}. The figure shows the complete sequence from query input to response generation.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.85\textwidth]{assets/cicn/flowchart.png}
-    \caption{Detailed algorithmic workflow of the QRAG framework.}
-    \label{fig:cicn_flowchart}
-\end{figure}
-
-The algorithm can be summarized as follows:
-
+It is crucial to develop a reliable classical pipeline first which will act as the efficient “Bike” in the Farm-Fetching system before developing the quantum pipeline. In this project, the classical part involves the design of a complete evaluation pipeline architecture based on a set of 130,000 document entries. Three different types of baseline architecture have been developed to test the limits of classical document retrieval:
 \begin{enumerate}
-    \item Accept user query $Q$
-    \item Perform preprocessing and POS tagging
-    \item Detect syntactic ambiguity
-    \item Route query to classical or quantum pipeline
-    \item Perform contextual realignment
-    \item Retrieve relevant documents
-    \item Generate final response using LLM
+	\item \textbf{Plain LLM Baseline:}  Plain LLM Baseline: Traditional generative control where document retrieval is achieved using only the parametric information and token harmonization \cite{harmonization2025}.
+	\item \textbf{MongoDB Vector RAG:} MongoDB Vector RAG: Semantics-based document retrieval using high dimensional vector embeddings.
+	\item \textbf{Dynamic Neo4j Knowledge Graph (KG) RAG:} Dynamic Neo4j KG RAG: Document retrieval through the use of graphs specifically for entity mapping and dependencies.
 \end{enumerate}
 
-\section{Design Considerations}
+\subsection{Constructive Hallucination for Graph Enrichment}
+Constructive Hallucination for Graph Enrichment
+While designing the Neo4j knowledge graph architecture, some problems with the extraction process using traditional methods have been noted. The extraction of entities by using LLM such as Qwen3 leads to the generation of relationships between those entities which do not exist in the document corpus.
 
-The design of the QRAG framework is guided by the following principles:
+Instead of ignoring these relational hallucinations or considering them as errors in the system design, an innovative solution named “Constructive Hallucination” has been introduced in this architecture. In the sequence, the implicit entities present in the hallucinated relation are identified and then validated for their existence mathematically. These validated entities form a part of the entity set permanently \cite{jin2025causality}. The sequence for this process is presented in Figure~\ref{fig:updated_crag_hallucination}.
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\textwidth]{assets/cicn/flowchart.png}
+	\caption{Updated classical architecture diagram highlighting the sequential Constructive Hallucination feedback loop for dynamic Knowledge Graph enrichment.}
+	\label{fig:updated_crag_hallucination}
+\end{figure}
+
+\section{The Bridge: Ambiguity Detection Mechanism}
+
+Considering the addition to the traditional infrastructure, the whole architecture requires a strict structural routing algorithm. While the traditional pipe works well for linear semantic queries, it faces problems in handling non-linear syntactic queries \cite{syntactic2025}. Here, the Ambiguity Controller acts as the gatekeeper, assessing the syntactic properties of the input query.
+
+Mathematically, the function of the Ambiguity Controller is expressed as:
+
+\begin{equation}
+	\delta(q) =
+	\begin{cases}
+		1, & \text{if } q \text{ contains ambiguity signatures} \\
+		0, & \text{otherwise}
+	\end{cases}
+\end{equation}
+
+where $\delta(q)$ decides whether the query is routed to the QRAG model or kept in the classical pipeline. 
+
+Ambiguity detection within the proposed model is triggered by signatures such as:
 \begin{itemize}
-    \item \textbf{Efficiency:} Classical processing is used wherever possible to minimize computational overhead.
-    \item \textbf{Selective Quantum Usage:} Quantum computation is applied only to complex queries.
-    \item \textbf{Modularity:} Independent components improve scalability and maintainability.
-    \item \textbf{Extensibility:} The system allows integration of advanced quantum models.
+	\item Prepositional Phrase Attachment (e.g., the parameters defined in the "Viola Experiment")
+	\item Reduced Relative Clauses
+	\item Coordination Ambiguity
 \end{itemize}
 
-\bigskip\noindent
-The suggested QRAG model outlines a hybrid approach that takes into consideration the strengths of both classical and quantum computing technologies. In fact, the utilization of ambiguity detection and quantum computation has clearly helped overcome the shortcomings associated with traditional RAG frameworks.
+These are examples of the structural arrangements for which classical parsers exhibit a preference for local attachment. Figure~\ref{fig:core_quantum_flowchart} demonstrates the process of sequential flow that explains how the system detects structural ambiguity and directs queries to the relevant computing resource.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{assets/Journal/flowchart.png}
+	\caption{Core hybrid sequence diagram illustrating the ambiguity detection and routing pipeline.}
+	\label{fig:core_quantum_flowchart}
+\end{figure}
+
+\section{Part II: The QRAG Framework for Research Evaluation}
+
+Based on computing the value of $\delta(q)$, each query is rerouted to one of the processing modules. For queries where $\delta(q) = 0$, the classical sequence is applied (Part I) utilizing the MongoDB and Neo4j database architectures. On the other hand, when $\delta(q) = 1$, indicating a structurally ambiguous query, the QRAG (Quantum Retrieval-Augmented Generation) processing module is engaged.
+
+As part of the Quantum Farm-Fetching paradigm, this unit plays the role of the exemplar “F1 Car,” which performs complicated topological computations. The architectural blueprint translates the query into its quantum state using a Variational Quantum Classifier (VQC) intended for processing on an IBM Brisbane 127-qubit quantum processing unit \cite{mandviwalla2018ibm, zhang2025quantum}, demonstrating the theoretical application of quantum computing before achieving fault tolerance \cite{kim2023evidence}.
+
+The tokens that make up the input query are mapped onto qubits using rotation gates:
+
+\begin{equation}
+	|\psi(x)\rangle = \bigotimes_{i=1}^{N} R_y(\phi(x_i)) |0\rangle_i
+\end{equation}
+
+Dependencies between tokens are modeled using CZ entangled gate operations. This theoretical framework successfully projects the variables into a high-dimensional Hilbert space \cite{cao2020quantum}, thus allowing the model to capture non-local, deep connections between the words that cannot be captured through the use of classic vector methods.
+
+The theoretical circuit utilized in the variational quantum classifier is defined as:
+
+\begin{equation}
+	U(\theta) = \prod_{l=1}^{L} \left(U_{ent}^{(l)} \cdot U_{rot}^{(l)}(\theta_l)\right)
+\end{equation}
+
+Ultimately, classification is finalized utilizing the expectation value of the observable, which resolves the ambiguity and determines the correct syntactic topology.
+
+\section{Contextual Realignment and Integration}
+
+The final architectural stage comprises of the generation of a proper interpretation of the query. The generated specification guarantees that the collected data matches the semantics of the global query instead of being just close locally.
+
+The following is the definition of interpretation mapping:
+
+\begin{equation}
+	C_{interp} =
+	\begin{cases}
+		S_1, & \text{if } \hat{y} = 1 \\
+		S_0, & \text{otherwise}
+	\end{cases}
+\end{equation}
+
+The interpreted query will be used for reorganizing the search order before obtaining the required information. The documents that are very relevant to the search will be recognized only based on the new interpretation in both MongoDB and Neo4j architectures. The interpreted information is then safely passed to the final generation LLM model.

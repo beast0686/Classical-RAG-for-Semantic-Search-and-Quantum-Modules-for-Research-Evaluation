@@ -20,15 +20,19 @@ The functional requirements of the system are summarized in Table~\ref{tab:funct
         \hline
         F3 & Hybrid Routing & Route queries to classical or quantum pipeline \\
         \hline
-        F4 & Classical Parsing & Process simple queries using SpaCy and retrieval system \\
+        F4 & Knowledge Graph Extraction & Dynamically extract and validate entities to populate the Neo4j database. \\
         \hline
-        F5 & Quantum Processing & Process ambiguous queries using VQC and quantum circuits \\
+        F5 & Constructive Hallucination & Algorithmically capture unprompted LLM entity relationships to enrich the retrieval context. \\
         \hline
-        F6 & Contextual Realignment & Select correct interpretation of query \\
+        F6 & Classical Parsing & Process simple queries using SpaCy and retrieval system \\
         \hline
-        F7 & Document Retrieval & Fetch relevant documents from vector database \\
+        F7 & Quantum Processing & Process ambiguous queries using VQC and quantum circuits \\
         \hline
-        F8 & Response Generation & Generate final output using LLM \\
+        F8 & Contextual Realignment & Select correct interpretation of query \\
+        \hline
+        F9 & Document Retrieval & Fetch relevant documents from vector database \\
+        \hline
+        F10 & Response Generation & Generate final output using LLM \\
         \hline
     \end{tabular}
 \end{table}
@@ -86,7 +90,7 @@ The hardware and software requirements required for development and deployment a
         \hline
         Database & MongoDB Atlas (Vector Search), Neo4j \\
         \hline
-        Quantum Tools & Qiskit, lambeq \\
+        Quantum Tools & Qiskit, lambeq, IBM Brisbane 127-qubit QPU \\
         \hline
         NLP Tools & SpaCy, Transformer-based embeddings \\
         \hline
@@ -109,11 +113,11 @@ Modular and decoupled architecture has been used for scalability and maintainabi
 The QRAG system is deployed using a cloud-native architecture. The deployment configuration and infrastructure setup are illustrated in Figures~\ref{fig:deployment_1} to \ref{fig:deployment_5}.
 
 \begin{itemize}
-    \item Backend deployed using Gunicorn with Uvicorn workers
-    \item Frontend served via PM2
+    \item Backend deployed using Gunicorn with Uvicorn workers on dedicated Azure App Services (e.g., ragqrag-backend)
+    \item Frontend served via PM2 and routed through a dedicated .tech custom domain for production research evaluation
     \item Lazy loading of models to reduce startup time
     \item Container timeout handling
-    \item CORS configuration for secure communication
+    \item CORS configuration for secure communication between the frontend domain and the Azure backend
 \end{itemize}
 
 Figure~\ref{fig:deployment_1} and Figure~\ref{fig:deployment_2} show the initial deployment configurations and service setup within the Azure environment.
@@ -184,4 +188,4 @@ The system is designed to support scalability and efficient resource utilization
 \end{itemize}
 
 \bigskip\noindent
-The system requirements ensure that the QRAG framework operates efficiently while maintaining scalability, reliability, and performance. The hybrid infrastructure supports both classical and quantum components effectively.
+The system requirements ensure that the framework operates efficiently while maintaining scalability, reliability, and performance. The hybrid infrastructure supports both classical and quantum components effectively.

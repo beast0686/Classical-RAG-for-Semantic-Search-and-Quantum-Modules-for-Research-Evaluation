@@ -5,7 +5,7 @@ This chapter presents a comprehensive review of existing research in Retrieval-A
 
 Retrieval-Augmented Generation (RAG) was introduced to overcome the limitations of parametric knowledge in Large Language Models (LLMs) by integrating them with external knowledge sources \cite{lewis2021rag}. This paradigm enhances factual accuracy by retrieving relevant documents and incorporating them into the generation process.
 
-However, the performance of RAG systems is highly dependent on the quality of retrieved context. Studies have shown that models struggle to effectively utilize long-context information, especially when dealing with complex queries \cite{liu2023lostmiddle}. Enhancements such as iterative calibration and concept-based retrieval have been proposed to improve retrieval alignment and contextual relevance \cite{sgic2025,concept2025rag}.
+However, the performance of RAG systems is highly dependent on the quality of retrieved context. Studies have shown that models struggle to effectively utilize long-context information, especially when dealing with complex queries \cite{liu2023lostmiddle}. Additionally, while vector-based methods show promise in detecting semantic similarity, they tend to fail at identifying explicit relations, which has led to an increasing trend toward dynamic knowledge graphs. It is evident from existing literature that there is a major limitation in automatically generating graph structures; in particular, models often hallucinate or skip non-conformant entities, leading to sparse data structures. Enhancements such as iterative calibration and concept-based retrieval have been proposed to improve retrieval alignment and contextual relevance \cite{sgic2025,concept2025rag}.
 
 \section{Syntactic Ambiguity in NLP}
 
@@ -62,9 +62,9 @@ To better understand the strengths and limitations of existing research, a compa
 
 \section{Research Gap}
 
-The literature highlights a clear gap in current approaches. While RAG systems improve factual grounding, they do not effectively address syntactic ambiguity. On the other hand, quantum approaches offer enhanced representational capabilities but lack integration into practical NLP systems.
+As is evident from the literature, there exists a notable weakness in the current approaches. While large RAGs have improved factual consistency and can be further optimized using algorithmic verification, they are unable to effectively reduce the deep structural ambiguity caused by inherent local attachment biases. On the other hand, quantum approaches offer greater representational strength but are currently not being applied to any NLP system.
 
-This gap motivates the development of a hybrid framework that selectively applies quantum processing for complex linguistic tasks while maintaining the efficiency of classical systems.
+To address this issue, a new approach involving the selective use of quantum computation for linguistics in classical systems needs to be explored.
 
 \bigskip\noindent
-The reviewed literature demonstrates that classical and quantum approaches have complementary strengths. Classical RAG systems are efficient but limited in handling structural ambiguity, whereas quantum models provide expressive power but face hardware constraints. The proposed QRAG framework builds upon these insights by integrating both paradigms into a unified architecture, enabling improved semantic understanding and more reliable retrieval-augmented generation.
+From the literature reviewed above, it is evident that classical and quantum techniques complement each other. Under the Farm-Fetching framework, while classical models are effective in facilitating straightforward search queries, they cannot navigate intricate non-linear structural vagaries. In this regard, the novel QRAG model enhances semantic reasoning and retrieves generation through the inclusion of both frameworks into one structure.

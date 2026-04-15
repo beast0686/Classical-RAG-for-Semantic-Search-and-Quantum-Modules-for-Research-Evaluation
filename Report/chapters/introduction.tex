@@ -2,42 +2,46 @@
 
 \section{Background}
 
-Large language models (LLMs) have made significant progress in the domain of natural language processing (NLP). LLMs have demonstrated exceptional competence in generating text, summarizing texts, and answering questions. However, LLMs are heavily dependent on parametric knowledge learned through training, thereby limiting their ability to retrieve relevant information and resulting in problems like hallucinations and lack of factual consistency.
+In the domain of NLP, large language models (LLMs) have made considerable progress. Large language models demonstrate a remarkable ability in text generation, summarization, and handling complex questions. However, these models depend greatly on parametric knowledge gained through training, thus limiting their ability to access recent information or specialized knowledge, causing problems such as hallucination and inaccuracy.
 
-In order to address these challenges, the paradigm of retrieval augmented generation (RAG) has been proposed. The RAG model involves the combination of LLMs with external knowledge sources. In this approach, relevant documents are first retrieved using a vector database and then used as context for generation.
+One possible solution to the above-mentioned problems is the use of the retrieval-augmented generation (RAG) paradigm. In RAG, LLMs are supplemented with external knowledge. Traditionally, documents are first retrieved from the vector database (e.g., MongoDB), and then used as the context for generation. Vector-based search can retrieve semantically similar documents; however, it may struggle to obtain contextual relations. On the other hand, dynamic Knowledge Graphs (KGs), using platforms like Neo4j, can directly incorporate the relational context between entities.
 
 \section{Problem Statement}
 
-Even though RAGs possess various strengths, the efficacy of the model is significantly influenced by the accuracy of its retrieval mechanism. One of the primary shortcomings arises when the system processes syntactically ambiguous sentences. Traditional methods rely on keyword searching and vector similarity, which fail to account for deeper linguistic dependencies in the language. As a result, the retrieval process often returns incorrect documents, leading to misguiding output.
+In spite of all the advantages of retrieval-augmented generators, the efficiency of such a model is greatly influenced by the precision and depth of the retrieval mechanism. Analyzing a large data corpus, for instance, a knowledge base with 130,000 elements, two problems characteristic of current architectures become apparent.
 
-The issue becomes increasingly prominent in situations where there are instances of prepositional phrase attachment and reduced relative clauses. The classical approach to natural language processing suffers from a local attachment bias. This implies that decisions are made based on proximity rather than global sentence structures.
+The first one is related to the fact that classical graph extraction algorithms usually disregard any pieces of information that do not fit into the existing schema. As a result, the missing links that the large language model tries to add turn out to be "hallucinations," and the constructed Knowledge Graph appears to be sparse and fragmented.
+
+Another problem is associated with the inability of the current architecture to analyze syntactically ambiguous sentences. For instance, the current algorithms are based on simple keyword matches, vector similarity measures, and linear heuristic parsers. Classical natural language processing cannot overcome the tendency to commit errors under the condition of local attachment biases. It means that the decisions regarding parsing will be taken not considering the context but solely because of the proximity of syntactic elements. In particular, it poses a challenge in the presence of deep prepositional phrase attachments and reduced relative clauses.
 
 \section{Motivation}
 
-The incapacity of classical RAG models to disambiguate syntactic ambiguity highlights the need for more powerful computational models. Quantum computing appears to be an appealing choice due to its ability to describe and compute data within Hilbert space. Through concepts like superposition and entanglement, quantum-based algorithms can model intricate correlations that are difficult to handle using classical models.
+In this regard, the investigation mainly follows the Farm-Fetching principle, whereby it identifies the utility criteria that different computational models need to satisfy. Classical heuristics serve as a very efficient mechanism of standard linear searches for regular semantic information. However, integrating the mechanisms used in the classical model of computation through "Constructive Hallucination" allows for the augmentation of knowledge graphs to facilitate their evolution into their most potent state.
 
-This research is guided by the premise that quantum models may enhance the performance of classical retrieval-based models, especially when dealing with non-linear structures in language. Instead of replacing conventional models, the aim is to develop a combination framework utilizing the best attributes of both worlds.
+However, the classical efficiency becomes limited in the face of an "exotic farm" that consists of complex syntactic dependencies and nonlinear language systems. The incapability of the RAG model based on the classical framework to distinguish these complex syntactic nuances necessitates the development of a specific computational shift. In this regard, quantum computing emerges as a viable alternative owing to its ability to represent and process high dimensional data in the Hilbert space. With the principles of superposition and entanglement, quantum-based algorithms are capable of modeling the complex nonlinear interdependencies that occur in human language, leading to classical parsing failures.
 
 \section{Proposed Approach}
 
-QRAG is introduced in this paper as the proposed Quantum RAG approach, which combines traditional RAG systems with Quantum Natural Language Processing (QNLP). The system includes the Ambiguity Controller, which checks for structurally complex questions and sends them to the quantum pipeline for processing.
+QRAG represents an architecture that merges large-scale classical retrieval with quantum precision in two phases, as follows:
 
-The quantum pipeline uses the Variational Quantum Circuit (VQC) for the encoding of grammatical dependencies as well as syntactic disambiguation. On the other hand, simpler questions will be processed using classical methods efficiently.
+First, a strong classical foundation is laid. In this regard, a semantic search engine is employed for a retrieval task using more than 130,000 documents. Here, MongoDB Vector Search, dynamic Neo4j Knowledge Graphs, and a baseline LLM are tested against each other. To address the problem of classical information loss, a Constructive Hallucination approach is proposed to detect and verify LLM hallucinated entities, thus dynamically enriching the Neo4j database.
 
-\newpage
+Secondly, the quantum co-processor is introduced. The ambiguity controller is used as a routing algorithm. Queries that are linear can be easily answered using a strengthened classical pipeline. For structurally complex queries, however, they are routed to a Quantum NLP pipeline that uses variational quantum circuits running both on simulated and real IBM 127 qubits quantum hardware.
 
 \section{Contributions}
 
-The key contributions of this work are as follows:
+The key contributions made through this study include the following:
 
 \begin{itemize}
-    \item Identification of syntactic ambiguity as a critical limitation in classical RAG systems.
-    \item Design of a hybrid Quantum-Classical framework for improved semantic understanding.
-    \item Integration of Variational Quantum Classifiers for syntactic disambiguation.
-    \item Development of an Ambiguity Controller for efficient query routing.
-    \item Empirical validation demonstrating improved accuracy on ambiguous query datasets.
+	\item Construction and testing of a classical RAG architecture using 130,000 documents for comparing the performance of MongoDB vector search, dynamic Neo4j Knowledge Graphs, and benchmark large language models.
+	\item Proposing and implementing the constructive hallucination approach to validate the creation of synthetic entities to enhance dynamic Knowledge Graphs.
+	\item Establishment of syntactic ambiguity and attachment bias as the major limitations associated with classical RAGs.
+	\item Formulation of the Farm-Fetching framework that defines the utility point where classical becomes quantum natural language processing problems.
+	\item Creation of a combined Quantum and Classical computing platform called QRAG using an Ambiguity Controller to facilitate dynamic query routing.
+	\item Implementation of Variational Quantum Classifier (VQC) techniques to encode grammatical dependency structures into parameterized quantum circuits.
+	\item Testing of this method using an IBM 127-qubit processor, thereby enhancing syntactic disambiguation accuracy for highly ambiguous query sets.
 \end{itemize}
 
 \section{Organization of the Report}
 
-This report will be divided as follows. The upcoming chapters will explain the theories behind RAG and quantum computing before describing the approach used by QRAG in detail. Implementation issues and a demonstration of the approach will follow, after which a discussion on how to move forward and conduct further research will conclude the report.
+The chapters that follow will describe the fundamental theories supporting Retrieval-Augmented Generation, Knowledge Graph creation, and Quantum Machine Learning at scale. Once the theories have been discussed, the methodology used to implement the two-stage process of Quantum Retrieval-Augmented Generation will be outlined, including the creation of the classical environment and the application of Quantum Mechanics to the environment. Further sections explain the details of the implementation, comparison between the classical models, the outcome of running the quantum pipeline experiment, and architectural limitations and future directions for research.
