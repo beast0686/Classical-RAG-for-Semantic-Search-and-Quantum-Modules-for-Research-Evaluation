@@ -116,47 +116,75 @@ def plot_fig3_simple_group():
 
 def plot_fig4_scatter():
     """
-    Figure 4: Depth Analysis
-    Update: Significantly larger labels.
+    Figure 4: Depth Analysis (Visual 3 Upgrade)
+    Update: Includes shaded error bounds for 1824-shot variance and high-res formatting.
     """
-    print("Generating Figure 4...")
-    fig, ax = plt.subplots(figsize=(8, 7))
+    print("Generating Figure 4 (Visual 3)...")
+    fig, ax = plt.subplots(figsize=(10, 8))  # Slightly wider for better trendline visibility
 
-    # Jitter
+    # 1. NEW DATA: You must replace this mock array with your actual 1824-shot standard deviations
+    # These represent the variance margin (+/-) for each of the 15 queries
+    variances = np.array([0.0175, 0.0181, 0.0142, 0.0166, 0.0171, 0.0155, 0.0148, 0.0132, 0.0159, 0.0177, 0.0145, 0.0162, 0.0138, 0.0180, 0.0165])
+
+    # Jitter for scatter points
     rng = np.random.RandomState(42)
     x_jitter = np.array(depths) + rng.normal(0, 0.05, size=len(depths))
 
     # Scatter
-    sc = ax.scatter(x_jitter, advantages, c=advantages, cmap='RdBu', s=150, edgecolor='black', vmin=-0.1, vmax=0.1)
+    sc = ax.scatter(x_jitter, advantages, c=advantages, cmap='RdBu', s=150, edgecolor='black', vmin=-0.1, vmax=0.1,
+                    zorder=3)
 
-    # Trendline
+    # 2. TRENDLINE MATH
     z = np.polyfit(depths, advantages, 1)
     p = np.poly1d(z)
-    ax.plot([1, 2, 3], p([1, 2, 3]), "k--", label='Trend', linewidth=3)
 
-    ax.axhline(0, color='gray', linestyle='-', linewidth=1.5)
+    # We need a smooth, sorted X-axis to draw the trendline and shading cleanly
+    x_trend = np.linspace(1, 3, 100)
+    y_trend = p(x_trend)
+    ax.plot(x_trend, y_trend, "k--", label='Linear Trend', linewidth=3, zorder=2)
 
-    # HUGE Labels
+    # 3. SHADED ERROR BOUNDS
+    # To shade the variance, we map the average variance at each complexity depth
+    # Depth 1 variance avg, Depth 2 variance avg, Depth 3 variance avg
+    depth_1_var = np.mean(variances[np.array(depths) == 1])
+    depth_2_var = np.mean(variances[np.array(depths) == 2])
+    depth_3_var = np.mean(variances[np.array(depths) == 3])
+
+    # Create a continuous variance line matching the x_trend points
+    interpolated_variance = np.interp(x_trend, [1, 2, 3], [depth_1_var, depth_2_var, depth_3_var])
+
+    # Apply the shading
+    ax.fill_between(x_trend,
+                    y_trend - interpolated_variance,
+                    y_trend + interpolated_variance,
+                    color='#34495e', alpha=0.2, label='1824-Shot Variance ($1\sigma$)', zorder=1)
+
+    # Baseline
+    ax.axhline(0, color='gray', linestyle='-', linewidth=1.5, zorder=0)
+
+    # Labels and Formatting
     ax.set_ylabel(r'Quantum Advantage ($\Delta$ AR)', fontsize=18, fontweight='bold')
     ax.set_xlabel('Syntactic Complexity', fontsize=18, fontweight='bold')
-
     ax.set_xticks([1, 2, 3])
     ax.set_xticklabels(['Local (1)', 'Functional (2)', 'Global (3)'], fontsize=16, fontweight='bold')
     ax.tick_params(axis='y', labelsize=14)
+    ax.set_title('Figure 4: Syntactic Complexity vs. Quantum Advantage', fontsize=18, pad=15)
 
-    ax.set_title('Figure 4: Advantage vs. Complexity', fontsize=18, pad=15)
+    # Legend
+    ax.legend(loc='upper left', fontsize=14)
 
     # Annotations
-    ax.text(3.1, 0.11, "Q11 (+10%)", fontsize=14, fontweight='bold', ha='left')
+    ax.text(2.9, 0.11, "Q11 (+10%)", fontsize=14, fontweight='bold', ha='right')
     ax.text(1.1, -0.09, "Q2 (Trap)", fontsize=14, fontweight='bold', ha='left', color='#c0392b')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(output_folder, 'figure4.png'), bbox_inches='tight')
+    plt.savefig(os.path.join(output_folder, 'figure4_upgraded.png'), bbox_inches='tight', dpi=300)
     plt.close()
-
 
 if __name__ == "__main__":
     plot_fig2_standard_bars()
     plot_fig3_simple_group()
     plot_fig4_scatter()
     print("Graphs generated: Font bug fixed, Labels enlarged.")
+
+

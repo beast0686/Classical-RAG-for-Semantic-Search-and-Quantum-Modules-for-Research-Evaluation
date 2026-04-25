@@ -1,0 +1,54 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{}%
+\contentsline {section}{\numberline {1.1}Background}{1}{}%
+\contentsline {section}{\numberline {1.2}Problem Statement}{1}{}%
+\contentsline {section}{\numberline {1.3}Motivation}{2}{}%
+\contentsline {section}{\numberline {1.4}Proposed Approach}{2}{}%
+\contentsline {section}{\numberline {1.5}Contributions}{3}{}%
+\contentsline {section}{\numberline {1.6}Organization of the Report}{4}{}%
+\contentsline {chapter}{\numberline {2}Literature Survey}{5}{}%
+\contentsline {section}{\numberline {2.1}Retrieval-Augmented Generation}{5}{}%
+\contentsline {section}{\numberline {2.2}Syntactic Ambiguity in NLP}{6}{}%
+\contentsline {section}{\numberline {2.3}Quantum Machine Learning}{6}{}%
+\contentsline {section}{\numberline {2.4}Quantum Natural Language Processing}{6}{}%
+\contentsline {section}{\numberline {2.5}Hybrid Quantum-Classical Systems}{7}{}%
+\contentsline {section}{\numberline {2.6}Comparative Analysis of Existing Works}{7}{}%
+\contentsline {section}{\numberline {2.7}Research Gap}{7}{}%
+\contentsline {chapter}{\numberline {3}System Requirements}{9}{}%
+\contentsline {section}{\numberline {3.1}Functional Requirements}{9}{}%
+\contentsline {section}{\numberline {3.2}Non-Functional Requirements}{9}{}%
+\contentsline {section}{\numberline {3.3}Hardware and Software Requirements}{9}{}%
+\contentsline {section}{\numberline {3.4}System Architecture Requirements}{9}{}%
+\contentsline {section}{\numberline {3.5}Deployment Requirements}{12}{}%
+\contentsline {section}{\numberline {3.6}Performance and Security Requirements}{13}{}%
+\contentsline {section}{\numberline {3.7}Scalability and Optimization}{15}{}%
+\contentsline {chapter}{\numberline {4}Proposed Method}{16}{}%
+\contentsline {section}{\numberline {4.1}Overview of the Dual-Entity Architecture}{16}{}%
+\contentsline {section}{\numberline {4.2}Part I: Classical RAG for Semantic Search}{17}{}%
+\contentsline {subsection}{\numberline {4.2.1}Constructive Hallucination for Graph Enrichment}{18}{}%
+\contentsline {section}{\numberline {4.3}The Bridge: Ambiguity Detection Mechanism}{18}{}%
+\contentsline {section}{\numberline {4.4}Part II: The QRAG Framework for Research Evaluation}{20}{}%
+\contentsline {section}{\numberline {4.5}Contextual Realignment and Integration}{22}{}%
+\contentsline {chapter}{\numberline {5}Methodology}{23}{}%
+\contentsline {section}{\numberline {5.1}System Design and Infrastructure}{23}{}%
+\contentsline {subsection}{\numberline {5.1.1}Cloud Backend and Classical Databases}{23}{}%
+\contentsline {subsection}{\numberline {5.1.2}Quantum Hardware Integration}{24}{}%
+\contentsline {section}{\numberline {5.2}Algorithms and Methods}{24}{}%
+\contentsline {subsection}{\numberline {5.2.1}Part I Algorithm: Constructive Hallucination and Parsing}{24}{}%
+\contentsline {subsection}{\numberline {5.2.2}Part II Algorithm: QML Execution and Benchmarking}{25}{}%
+\contentsline {subsection}{\numberline {5.2.3}Evaluation Methodology}{25}{}%
+\contentsline {subsubsection}{Generative Assessment: The RAGAS Framework}{26}{}%
+\contentsline {subsubsection}{Quantum Retrieval Metrics and Hardware Telemetry}{26}{}%
+\contentsline {section}{\numberline {5.3}Summary}{27}{}%
+\contentsline {chapter}{\numberline {6}Results and Discussion}{28}{}%
+\contentsline {section}{\numberline {6.1}Part I: Classical RAG for High-Throughput Semantic Search}{28}{}%
+\contentsline {subsection}{\numberline {6.1.1}Comparative Pipeline Benchmarks and the "Linearity Trap"}{28}{}%
+\contentsline {subsection}{\numberline {6.1.2}Constructive Hallucination and KG Enrichment}{29}{}%
+\contentsline {section}{\numberline {6.2}Part II: The QRAG Framework - Quantum Modules for Research Evaluation}{31}{}%
+\contentsline {subsection}{\numberline {6.2.1}Escaping the "Linearity Trap"}{31}{}%
+\contentsline {subsection}{\numberline {6.2.2}The "Viola Moment": Syntactic Disambiguation via QRAG}{31}{}%
+\contentsline {section}{\numberline {6.3}Hybrid System Interface and Deployment Analysis}{33}{}%
+\contentsline {subsection}{\numberline {6.3.1}Impact of Classical Retrieval Depth ($k$)}{33}{}%
+\contentsline {subsection}{\numberline {6.3.2}Evaluation Dashboards and Quantum Research Interface}{36}{}%
+\contentsline {subsection}{\numberline {6.3.3}Edge Case Analysis \& Mobile View}{40}{}%
+\contentsline {section}{\numberline {6.4}Conclusion}{41}{}%

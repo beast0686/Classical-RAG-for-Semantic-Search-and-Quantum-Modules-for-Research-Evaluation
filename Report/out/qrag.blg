@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: qrag.aux
+A level-1 auxiliary file: chapters/abstract.aux
+A level-1 auxiliary file: chapters/introduction.aux
+A level-1 auxiliary file: chapters/literature_survery.aux
+A level-1 auxiliary file: chapters/system_reqs.aux
+A level-1 auxiliary file: chapters/proposed_method.aux
+A level-1 auxiliary file: chapters/methodology.aux
+A level-1 auxiliary file: chapters/results_and_discussion.aux
+A level-1 auxiliary file: chapters/conclusion.aux
+A level-1 auxiliary file: chapters/future_scope.aux
+The style file: unsrt.bst
+Database file #1: ref.bib
+You've used 27 entries,
+            1791 wiz_defined-function locations,
+            586 strings with 7843 characters,
+and the built_in function-call counts, 5106 in all, are:
+= -- 429
+> -- 262
+< -- 2
++ -- 97
+- -- 70
+* -- 272
+:= -- 874
+add.period$ -- 82
+call.type$ -- 27
+change.case$ -- 27
+chr.to.int$ -- 0
+cite$ -- 27
+duplicate$ -- 252
+empty$ -- 491
+format.name$ -- 70
+if$ -- 1126
+int.to.chr$ -- 0
+int.to.str$ -- 27
+missing$ -- 27
+newline$ -- 138
+num.names$ -- 27
+pop$ -- 74
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 122
+stack$ -- 0
+substring$ -- 178
+swap$ -- 48
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 42
+width$ -- 29
+write$ -- 283

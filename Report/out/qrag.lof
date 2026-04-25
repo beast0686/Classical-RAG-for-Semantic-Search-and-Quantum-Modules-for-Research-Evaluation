@@ -1,0 +1,29 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Azure deployment resources overview.}}{12}{}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Azure resource grouping and service configuration.}}{13}{}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Backend deployment logs and service execution.}}{14}{}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Application runtime monitoring and configuration.}}{14}{}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Overall deployment architecture and system topology.}}{15}{}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Vertical CRAG sequence diagram illustrating the hybrid processing flow.}}{17}{}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Updated classical architecture diagram highlighting the sequential Constructive Hallucination feedback loop for dynamic Knowledge Graph enrichment.}}{19}{}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Core hybrid sequence diagram illustrating the ambiguity detection and routing pipeline.}}{21}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Automated lexical metrics versus human-evaluated factual accuracy across the three classical pipelines.}}{29}{}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Performance improvements in BLEU and Coherence metrics after the implementation of the Constructive Hallucination key-override mechanism.}}{30}{}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Bar chart showcasing the Linearity Trap: Automated lexical metrics falsely indicating high classical performance on ambiguous queries, contrasted against actual factual fidelity.}}{32}{}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Bar chart depicting comparative performance across all 15 queries of the Ambiguity Challenge Dataset, highlighting the quantum resolution of classical parsing failures.}}{32}{}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Hybrid system homepage interface for query execution and interaction.}}{34}{}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Query results interface for $k=19$, illustrating a dense, contextually rich generative output based on deep retrieval.}}{34}{}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces System interface demonstrating performance degradation when constrained to a lower retrieval depth ($k=3$).}}{35}{}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Exported visual representation of the sparse knowledge graph generated due to insufficient retrieval depth ($k=3$).}}{36}{}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces The Comparison Dashboard, providing side-by-side model outputs and tabular data for cross-pipeline analysis.}}{37}{}%
+\contentsline {figure}{\numberline {6.10}{\ignorespaces The Metrics Dashboard, featuring filtering interfaces for granular tracking of RAGAS performance scores.}}{38}{}%
+\contentsline {figure}{\numberline {6.11}{\ignorespaces Website Section for Quantum Research}}{39}{}%
+\contentsline {figure}{\numberline {6.12}{\ignorespaces Scatter plot depicting the direct relationship between query syntactic complexity and the realized quantum advantage.}}{40}{}%
+\contentsline {figure}{\numberline {6.13}{\ignorespaces Edge case comparison interface demonstrating the baseline LLM outperforming the hybrid RAG system on out-of-domain queries.}}{41}{}%
+\contentsline {figure}{\numberline {6.14}{\ignorespaces Mobile View for the Website featuring special features like Graph Pop-Up window, etc.}}{42}{}%
